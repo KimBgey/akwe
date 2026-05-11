@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(npm run *)",
-      "PowerShell(Get-PSDrive C | Select-Object Used, Free | ForEach-Object { \"Utilisé: $\\([math]::Round\\($_.Used/1GB,1\\)\\) GB | Libre: $\\([math]::Round\\($_.Free/1GB,1\\)\\) GB\" })"
-    ]
-  }
-}
