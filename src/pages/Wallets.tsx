@@ -94,7 +94,7 @@ function GoalsSummaryPanel({ goals }: { goals: GoalWallet[] }) {
 }
 
 export function Wallets({ uid }: { uid: string }) {
-  const { state, addGoal, updateGoal, transferToGoal } = useBudget(uid)
+  const { state, addGoal, transferToGoal } = useBudget(uid)
   const setRightPanel = useRightPanel()
 
   const [showAdd, setShowAdd]           = useState(false)
