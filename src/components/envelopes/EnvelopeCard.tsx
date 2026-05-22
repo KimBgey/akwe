@@ -117,20 +117,16 @@ export function EnvelopeCard({ envelope, onClick }: EnvelopeCardProps) {
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            <div className="flex items-end justify-between gap-2 min-w-0">
-              <div className="min-w-0">
-                <p className="text-xs text-white/40 mb-0.5">Solde</p>
-                <p className={clsx('text-xl font-bold font-mono whitespace-nowrap', isOverdrawn ? 'text-accent-rose' : 'text-white')}>
-                  {formatCurrency(balance)}
-                </p>
-              </div>
+            <div>
+              <p className="text-xs text-white/40 mb-0.5">Solde</p>
+              <p className={clsx('text-xl font-bold font-mono whitespace-nowrap', isOverdrawn ? 'text-accent-rose' : 'text-white')}>
+                {formatCurrency(balance)}
+              </p>
               {envelope.type !== 'locked' && (
-                <div className="text-right shrink-0">
-                  <p className="text-xs text-white/40 mb-0.5">Dépensé</p>
-                  <p className="text-xs font-semibold text-white/50 font-mono whitespace-nowrap">
-                    {formatCurrency(envelope.spentAmount)}
-                  </p>
-                </div>
+                <p className="text-[11px] text-white/35 mt-0.5 whitespace-nowrap">
+                  Dépensé&nbsp;
+                  <span className="font-semibold text-white/50">{formatCurrency(envelope.spentAmount)}</span>
+                </p>
               )}
             </div>
 
