@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { updateProfile } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { useAuth } from '@/contexts/AuthContext'
@@ -10,9 +11,36 @@ import { useRightPanel } from '@/contexts/RightPanelContext'
 import {
   CalendarDays, Pencil, Check, X, Trash2, AlertTriangle,
   LogOut, CheckCircle2, AlertCircle, Loader2, Database,
-  ReceiptText, Target, Layers,
+  ReceiptText, Target, Layers, BookOpen, ChevronDown,
 } from 'lucide-react'
 import clsx from 'clsx'
+
+const FAQ = [
+  {
+    q: 'C\'est quoi une enveloppe ?',
+    a: 'Une enveloppe représente une catégorie budgétaire. Tu alloues un montant à chaque enveloppe lors de ton virement, et tu dépenses uniquement depuis celle qui correspond. Tu ne peux pas dépenser ce qui n\'est pas alloué.',
+  },
+  {
+    q: 'Comment distribuer mon revenu ?',
+    a: 'Dans "Répartition automatique" ci-dessus, définis combien va dans chaque enveloppe. Quand tu saisiras ton revenu mensuel, Akwɛ appliquera ces règles automatiquement. Le reste atterrit dans le Solde courant.',
+  },
+  {
+    q: 'Qu\'est-ce que le reliquat ?',
+    a: 'C\'est le solde non dépensé à la fin du cycle. Quand tu saisis un nouveau revenu, Akwɛ te propose d\'en faire quelque chose : le reporter, l\'épargner, l\'envoyer vers un objectif ou le stocker dans le Bonus mensuel.',
+  },
+  {
+    q: 'À quoi sert le Bonus mensuel ?',
+    a: 'C\'est une enveloppe libre qui accumule les reliquats et les revenus imprévus (bonus, cadeaux, remboursements). Contrairement à l\'Épargne bloquée, tu peux en disposer librement à tout moment.',
+  },
+  {
+    q: 'Comment créer et alimenter un objectif ?',
+    a: 'Va sur la page "Objectifs" et clique sur "Nouveau". Définis un montant cible et une contribution mensuelle. Pour alimenter, utilise le bouton "Virer vers" sur le tableau de bord — tu choisis la source (Solde courant ou Bonus).',
+  },
+  {
+    q: 'L\'épargne bloquée est vraiment bloquée ?',
+    a: 'Oui — chaque retrait demande une confirmation explicite. C\'est voulu : cette friction t\'évite de puiser dans ton épargne impulsivement. Utile pour un fond d\'urgence ou une épargne long terme.',
+  },
+]
 
 const PAY_DAY_OPTIONS = [1, 5, 10, 15, 20, 25, 28, 30]
 
@@ -28,7 +56,8 @@ export function Settings({ uid }: { uid: string }) {
   const [editingName, setEditingName]   = useState(false)
   const [nameValue, setNameValue]       = useState(user?.displayName ?? '')
   const [savingName, setSavingName]     = useState(false)
-  const [confirming, setConfirming]     = useState(false)
+  const [confirming, setConfirming]         = useState(false)
+  const [openFaq, setOpenFaq]               = useState<number | null>(null)
   const [editingRule, setEditingRule]         = useState<string | null>(null)
   const [ruleValue, setRuleValue]             = useState('')
   const [confirmingSignOut, setConfirmingSignOut] = useState(false)
@@ -356,6 +385,50 @@ export function Settings({ uid }: { uid: string }) {
         <p className="text-[11px] text-white/30">
           Le reste va automatiquement dans le solde courant.
         </p>
+      </section>
+
+      {/* ── Comment ça marche ─────────────────────────────────────────────────── */}
+      <section className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">
+            Comment ça marche
+          </p>
+          <Link
+            to="/guide"
+            className="flex items-center gap-1.5 text-[11px] text-brand-400 hover:text-brand-300 transition"
+          >
+            <BookOpen size={11} />
+            Guide complet
+          </Link>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          {FAQ.map((item, i) => (
+            <div
+              key={i}
+              className="rounded-2xl border border-white/8 bg-surface-2 overflow-hidden"
+            >
+              <button
+                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left"
+              >
+                <span className="text-sm font-medium text-white/70">{item.q}</span>
+                <ChevronDown
+                  size={14}
+                  className={clsx(
+                    'shrink-0 text-white/30 transition-transform duration-200',
+                    openFaq === i && 'rotate-180'
+                  )}
+                />
+              </button>
+              {openFaq === i && (
+                <div className="px-4 pb-4 text-xs text-white/45 leading-relaxed border-t border-white/5 pt-3">
+                  {item.a}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* ── Zone de danger ─────────────────────────────────────────────────────── */}

@@ -15,6 +15,7 @@ import { ReliquatModal } from '@/components/dashboard/ReliquatModal'
 import { TransferModal } from '@/components/goals/TransferModal'
 import { UserMenu } from '@/components/layout/UserMenu'
 import { UnexpectedIncomeModal } from '@/components/dashboard/UnexpectedIncomeModal'
+import { WelcomeModal } from '@/components/dashboard/WelcomeModal'
 import {
   ArrowDownLeft, ArrowRightLeft, TrendingUp,
   Sparkles, Lock, Wallet, Target, Banknote, CalendarClock, Clock,
@@ -299,6 +300,9 @@ export function Dashboard({ uid }: { uid: string }) {
         goals={state.goalWallets}
         onAction={handleReliquat}
       />
+
+      {/* Onboarding — visible une seule fois */}
+      <WelcomeModal />
     </div>
   )
 }

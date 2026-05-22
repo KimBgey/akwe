@@ -28,7 +28,7 @@ export function Modal({ open, onClose, title, children, size = 'md' }: ModalProp
       />
       <div
         className={clsx(
-          'relative z-10 w-full rounded-3xl border border-white/10 bg-surface-1 shadow-[0_24px_80px_rgba(0,0,0,0.6)] animate-fade-up',
+          'relative z-10 w-full rounded-3xl border border-white/10 bg-surface-1 shadow-[0_24px_80px_rgba(0,0,0,0.6)] animate-fade-up flex flex-col max-h-[90vh]',
           {
             'max-w-sm': size === 'sm',
             'max-w-md': size === 'md',
@@ -36,7 +36,7 @@ export function Modal({ open, onClose, title, children, size = 'md' }: ModalProp
           }
         )}
       >
-        <div className="flex items-center justify-between border-b border-white/5 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-white/5 px-6 py-4 shrink-0">
           <h2 className="text-base font-semibold text-white">{title}</h2>
           <button
             onClick={onClose}
@@ -45,7 +45,7 @@ export function Modal({ open, onClose, title, children, size = 'md' }: ModalProp
             <X size={16} />
           </button>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="p-6 overflow-y-auto">{children}</div>
       </div>
     </div>
   )

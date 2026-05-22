@@ -134,9 +134,9 @@ export function History({ uid }: { uid: string }) {
 
   return (
     <div className="flex flex-col gap-8">
-      <div>
-        <p className="text-xs uppercase tracking-widest text-white/30 mb-1">Historique</p>
-        <h1 className="text-3xl font-bold text-white">Transactions</h1>
+      <div className="min-w-0">
+        <p className="text-[11px] uppercase tracking-widest text-white/30">Historique</p>
+        <h1 className="text-xl font-bold text-white leading-tight truncate">Transactions</h1>
       </div>
 
       {/* Stats row */}

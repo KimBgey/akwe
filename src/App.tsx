@@ -6,6 +6,7 @@ import { Dashboard } from '@/pages/Dashboard'
 import { Wallets } from '@/pages/Wallets'
 import { History } from '@/pages/History'
 import { Settings } from '@/pages/Settings'
+import { Guide } from '@/pages/Guide'
 import { Login } from '@/pages/Login'
 import { LayoutDashboard, Target, Clock, Settings as SettingsIcon, Loader2 } from 'lucide-react'
 import clsx from 'clsx'
@@ -129,6 +130,7 @@ function AppShell() {
                 <Route path="/wallets"  element={<Wallets   uid={user.uid} />} />
                 <Route path="/history"  element={<History   uid={user.uid} />} />
                 <Route path="/settings" element={<Settings  uid={user.uid} />} />
+                <Route path="/guide"    element={<Guide />} />
               </Routes>
             </main>
           </RightPanelProvider>
@@ -148,6 +150,7 @@ function AppShell() {
                 <Route path="/wallets"  element={<Wallets   uid={user.uid} />} />
                 <Route path="/history"  element={<History   uid={user.uid} />} />
                 <Route path="/settings" element={<Settings  uid={user.uid} />} />
+                <Route path="/guide"    element={<Guide />} />
               </Routes>
             </main>
           </RightPanelProvider>
