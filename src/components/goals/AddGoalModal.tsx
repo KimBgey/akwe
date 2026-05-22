@@ -61,44 +61,44 @@ export function AddGoalModal({ open, onClose, onAdd }: AddGoalModalProps) {
   return (
     <Modal open={open} onClose={() => { reset(); onClose() }} title="Nouvel objectif" size="lg">
       <div className="flex flex-col gap-5">
-        <div className="flex gap-4">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium uppercase tracking-widest text-white/40">Icône</label>
-            <div className="grid grid-cols-4 gap-1.5">
-              {ICONS.map((ic) => (
-                <button
-                  key={ic}
-                  type="button"
-                  onClick={() => setIcon(ic)}
-                  className={clsx(
-                    'flex h-9 w-9 items-center justify-center rounded-lg text-lg transition',
-                    icon === ic
-                      ? 'bg-brand-500/20 border border-brand-500/40'
-                      : 'bg-surface-3 border border-transparent hover:border-white/10'
-                  )}
-                >
-                  {ic}
-                </button>
-              ))}
-            </div>
+        {/* Icône */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-medium uppercase tracking-widest text-white/40">Icône</label>
+          <div className="grid grid-cols-6 gap-1.5">
+            {ICONS.map((ic) => (
+              <button
+                key={ic}
+                type="button"
+                onClick={() => setIcon(ic)}
+                className={clsx(
+                  'flex h-9 w-full items-center justify-center rounded-lg text-lg transition',
+                  icon === ic
+                    ? 'bg-brand-500/20 border border-brand-500/40'
+                    : 'bg-surface-3 border border-transparent hover:border-white/10'
+                )}
+              >
+                {ic}
+              </button>
+            ))}
           </div>
+        </div>
 
-          <div className="flex flex-col gap-1.5 flex-1">
-            <label className="text-xs font-medium uppercase tracking-widest text-white/40">Couleur</label>
-            <div className="grid grid-cols-5 gap-1.5">
-              {COLORS.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setColor(c)}
-                  className={clsx(
-                    'h-8 w-8 rounded-lg transition ring-offset-surface-1',
-                    color === c && 'ring-2 ring-white/50 ring-offset-2'
-                  )}
-                  style={{ backgroundColor: c }}
-                />
-              ))}
-            </div>
+        {/* Couleur */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-medium uppercase tracking-widest text-white/40">Couleur</label>
+          <div className="grid grid-cols-5 gap-2">
+            {COLORS.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => setColor(c)}
+                className={clsx(
+                  'h-8 w-full rounded-lg transition ring-offset-surface-1',
+                  color === c && 'ring-2 ring-white/50 ring-offset-2'
+                )}
+                style={{ backgroundColor: c }}
+              />
+            ))}
           </div>
         </div>
 
@@ -110,24 +110,22 @@ export function AddGoalModal({ open, onClose, onAdd }: AddGoalModalProps) {
           placeholder="Ex: Voyage Tokyo"
         />
 
-        <div className="grid grid-cols-2 gap-4">
-          <Input
-            label="Montant cible"
-            type="number"
-            value={targetAmount}
-            onChange={(e) => setTargetAmount(e.target.value)}
-            suffix="F"
-            placeholder="500 000"
-          />
-          <Input
-            label="Contribution mensuelle"
-            type="number"
-            value={monthlyContribution}
-            onChange={(e) => setMonthlyContribution(e.target.value)}
-            suffix="F"
-            placeholder="50 000"
-          />
-        </div>
+        <Input
+          label="Montant cible"
+          type="number"
+          value={targetAmount}
+          onChange={(e) => setTargetAmount(e.target.value)}
+          suffix="F"
+          placeholder="500 000"
+        />
+        <Input
+          label="Contribution mensuelle"
+          type="number"
+          value={monthlyContribution}
+          onChange={(e) => setMonthlyContribution(e.target.value)}
+          suffix="F"
+          placeholder="50 000"
+        />
 
         <Input
           label="Échéance (optionnel)"
