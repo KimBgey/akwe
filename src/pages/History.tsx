@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useBudget } from '@/hooks/useBudget'
 import { useRightPanel } from '@/contexts/RightPanelContext'
-import { TransactionList } from '@/components/transactions/TransactionList'
+import { TransactionHistory } from '@/components/transactions/TransactionHistory'
 import { Card } from '@/components/ui/Card'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import { formatCurrency } from '@/utils/calculations'
@@ -105,6 +105,7 @@ function StatPanel({ transactions }: { transactions: Transaction[] }) {
 export function History({ uid }: { uid: string }) {
   const { state } = useBudget(uid)
   const setRightPanel = useRightPanel()
+  const [categoryFilter, setCategoryFilter] = useState<Category | 'all'>('all')
 
   const expensesByCategory = state.transactions
     .filter((t) => t.type === 'expense')
@@ -115,6 +116,7 @@ export function History({ uid }: { uid: string }) {
 
   const chartData = Object.entries(expensesByCategory)
     .map(([key, total]) => ({
+      key: key as Category,
       name: CATEGORIES[key as Category]?.label ?? key,
       emoji: CATEGORIES[key as Category]?.emoji ?? '💡',
       total,
@@ -154,9 +156,20 @@ export function History({ uid }: { uid: string }) {
       {/* Chart */}
       {chartData.length > 0 && (
         <Card>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-white/30 mb-5">
-            Dépenses par catégorie
-          </h2>
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-white/30">
+              Dépenses par catégorie
+            </h2>
+            {categoryFilter !== 'all' && (
+              <button
+                type="button"
+                onClick={() => setCategoryFilter('all')}
+                className="text-[11px] font-medium text-brand-300 hover:text-brand-200"
+              >
+                Réinitialiser
+              </button>
+            )}
+          </div>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={chartData} barCategoryGap="30%">
               <XAxis
@@ -178,12 +191,21 @@ export function History({ uid }: { uid: string }) {
                 formatter={(value: number) => [formatCurrency(value), 'Dépenses']}
               />
               <Bar dataKey="total" radius={[6, 6, 0, 0]}>
-                {chartData.map((_, idx) => (
-                  <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
+                {chartData.map((entry, idx) => (
+                  <Cell
+                    key={idx}
+                    fill={COLORS[idx % COLORS.length]}
+                    fillOpacity={categoryFilter === 'all' || categoryFilter === entry.key ? 1 : 0.25}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setCategoryFilter(categoryFilter === entry.key ? 'all' : entry.key)}
+                  />
                 ))}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
+          <p className="mt-3 text-[11px] text-white/25">
+            Clique une barre pour filtrer la liste ci-dessous
+          </p>
         </Card>
       )}
 
@@ -192,10 +214,12 @@ export function History({ uid }: { uid: string }) {
         <h2 className="text-xs font-semibold uppercase tracking-widest text-white/30 mb-4">
           Toutes les transactions
         </h2>
-        <TransactionList
+        <TransactionHistory
           transactions={state.transactions}
           envelopes={state.envelopes}
           goalWallets={state.goalWallets}
+          categoryFilter={categoryFilter}
+          onCategoryFilterChange={setCategoryFilter}
         />
       </Card>
     </div>

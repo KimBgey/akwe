@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Envelope, CATEGORIES, Category } from '@/types'
 import { getBalance, formatCurrency } from '@/utils/calculations'
+import { suggestCategory } from '@/utils/categorize'
 import { BottomSheet } from '@/components/ui/BottomSheet'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
@@ -25,8 +26,17 @@ export function TransactionForm({
   const [envelopeId, setEnvelopeId] = useState(defaultEnvelopeId ?? '')
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState<Category>('autre')
+  const [categoryTouched, setCategoryTouched] = useState(false)
   const [label, setLabel] = useState('')
   const [error, setError] = useState('')
+
+  function handleLabelChange(value: string) {
+    setLabel(value)
+    if (!categoryTouched) {
+      const suggested = suggestCategory(value)
+      if (suggested) setCategory(suggested)
+    }
+  }
 
   const spendable = envelopes.filter((e) => e.type !== 'locked')
   const selected = spendable.find((e) => e.id === envelopeId)
@@ -38,6 +48,7 @@ export function TransactionForm({
     setError('')
     setEnvelopeId(defaultEnvelopeId ?? '')
     setCategory('autre')
+    setCategoryTouched(false)
   }
 
   function handleSubmit() {
@@ -102,7 +113,7 @@ export function TransactionForm({
                 <button
                   key={key}
                   type="button"
-                  onClick={() => setCategory(key)}
+                  onClick={() => { setCategory(key); setCategoryTouched(true) }}
                   className={clsx(
                     'shrink-0 flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition',
                     category === key
@@ -123,7 +134,7 @@ export function TransactionForm({
           label="Libellé"
           type="text"
           value={label}
-          onChange={(e) => setLabel(e.target.value)}
+          onChange={(e) => handleLabelChange(e.target.value)}
           placeholder="Ex: Courses marché"
         />
 
