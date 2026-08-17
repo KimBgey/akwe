@@ -84,10 +84,10 @@ export function ReliquatModal({ open, onClose, balance, month, goals, onAction }
           {/* Montant reliquat */}
           <div className="rounded-2xl bg-gradient-brand p-px">
             <div className="rounded-2xl bg-surface-2 px-4 py-3 text-center">
-              <p className="text-[11px] uppercase tracking-widest text-white/30 mb-0.5">
+              <p className="text-[11px] uppercase tracking-widest text-ink/50 mb-0.5">
                 Reliquat de {month}
               </p>
-              <p className="text-2xl font-bold font-mono text-white">{formatCurrency(balance)}</p>
+              <p className="text-2xl font-bold font-mono text-ink">{formatCurrency(balance)}</p>
             </div>
           </div>
 
@@ -98,7 +98,7 @@ export function ReliquatModal({ open, onClose, balance, month, goals, onAction }
                 onClick={() => handleChoice(action)}
                 disabled={action === 'boost_goal' && activeGoals.length === 0}
                 className={clsx(
-                  'flex items-center gap-3 rounded-xl border border-white/8 bg-surface-3 p-3.5 text-left transition disabled:opacity-40',
+                  'flex items-center gap-3 rounded-xl border border-ink/8 bg-surface-3 p-3.5 text-left transition disabled:opacity-40',
                   hoverClass
                 )}
               >
@@ -106,8 +106,8 @@ export function ReliquatModal({ open, onClose, balance, month, goals, onAction }
                   <Icon size={16} />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">{label}</p>
-                  <p className="text-xs text-white/40">{sub}</p>
+                  <p className="text-sm font-semibold text-ink">{label}</p>
+                  <p className="text-xs text-ink/60">{sub}</p>
                 </div>
               </button>
             ))}
@@ -117,12 +117,12 @@ export function ReliquatModal({ open, onClose, balance, month, goals, onAction }
         <div className="flex flex-col gap-4">
           <button
             onClick={() => setStep('choice')}
-            className="self-start text-xs text-white/40 hover:text-white/60 transition"
+            className="self-start text-xs text-ink/60 hover:text-ink/60 transition"
           >
             ← Retour
           </button>
 
-          <p className="text-sm text-white/50">
+          <p className="text-sm text-ink/70">
             Booster avec{' '}
             <span className="font-semibold text-accent-emerald">{formatCurrency(balance)}</span>
           </p>
@@ -136,15 +136,15 @@ export function ReliquatModal({ open, onClose, balance, month, goals, onAction }
                   'w-full text-left rounded-xl border p-3 transition',
                   goalId === g.id
                     ? 'border-accent-emerald/40 bg-accent-emerald/5'
-                    : 'border-white/5 bg-surface-3 hover:border-white/10'
+                    : 'border-ink/5 bg-surface-3 hover:border-ink/10'
                 )}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
                     <span>{g.icon}</span>
-                    <span className="text-sm font-medium text-white">{g.name}</span>
+                    <span className="text-sm font-medium text-ink">{g.name}</span>
                   </div>
-                  <span className="text-xs font-mono text-white/40">
+                  <span className="text-xs font-mono text-ink/60">
                     {Math.round(getProgress(g) * 100)}%
                   </span>
                 </div>

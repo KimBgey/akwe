@@ -37,7 +37,7 @@ export function TransactionRow({
   const envName = getEnvelopeName(tx.envelopeId, envelopes, goalWallets)
 
   return (
-    <div className="flex items-center gap-4 py-3.5 transition hover:bg-white/[0.02] -mx-2 px-2 rounded-xl">
+    <div className="flex items-center gap-4 py-3.5 transition hover:bg-ink/[0.02] -mx-2 px-2 rounded-xl">
       <div
         className={clsx(
           'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl',
@@ -52,8 +52,8 @@ export function TransactionRow({
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-white truncate">{tx.label}</p>
-        <p className="text-xs text-white/30 truncate">
+        <p className="text-sm font-medium text-ink truncate">{tx.label}</p>
+        <p className="text-xs text-ink/50 truncate">
           {envName} ·{' '}
           {format(new Date(tx.date), 'd MMM yyyy', { locale: fr })}
         </p>

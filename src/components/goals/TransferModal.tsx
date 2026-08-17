@@ -64,7 +64,7 @@ export function TransferModal({ open, onClose, goals, sources, onTransfer }: Tra
 
         {/* Source selector */}
         <div className="flex flex-col gap-2">
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Source</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-ink/60">Source</p>
           <div className="grid grid-cols-2 gap-2">
             {sources.map((src) => {
               const cfg = SOURCE_CONFIG[src.type] ?? SOURCE_CONFIG['free']
@@ -80,16 +80,16 @@ export function TransferModal({ open, onClose, goals, sources, onTransfer }: Tra
                     'flex flex-col gap-2 rounded-2xl border p-3.5 text-left transition',
                     selected
                       ? cfg.selectedClass
-                      : 'border-white/5 bg-surface-3 hover:border-white/10'
+                      : 'border-ink/5 bg-surface-3 hover:border-ink/10'
                   )}
                 >
                   <div className="flex items-center gap-2">
-                    <Icon size={14} className={selected ? cfg.iconClass : 'text-white/30'} />
-                    <span className={clsx('text-xs font-semibold', selected ? 'text-white' : 'text-white/50')}>
+                    <Icon size={14} className={selected ? cfg.iconClass : 'text-ink/50'} />
+                    <span className={clsx('text-xs font-semibold', selected ? 'text-ink' : 'text-ink/70')}>
                       {src.name}
                     </span>
                   </div>
-                  <p className={clsx('text-base font-bold font-mono', selected ? 'text-white' : 'text-white/40')}>
+                  <p className={clsx('text-base font-bold font-mono', selected ? 'text-ink' : 'text-ink/60')}>
                     {formatCurrency(balance)}
                   </p>
                 </button>
@@ -100,9 +100,9 @@ export function TransferModal({ open, onClose, goals, sources, onTransfer }: Tra
 
         {/* Goal selector */}
         <div className="flex flex-col gap-2">
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Objectif</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-ink/60">Objectif</p>
           {activeGoals.length === 0 ? (
-            <p className="text-sm text-white/30 py-4 text-center">Aucun objectif actif</p>
+            <p className="text-sm text-ink/50 py-4 text-center">Aucun objectif actif</p>
           ) : (
             <div className="flex flex-col gap-2 max-h-52 overflow-y-auto">
               {activeGoals.map((g) => (
@@ -114,15 +114,15 @@ export function TransferModal({ open, onClose, goals, sources, onTransfer }: Tra
                     'w-full text-left rounded-xl border p-3.5 transition',
                     goalId === g.id
                       ? 'border-accent-emerald/40 bg-accent-emerald/5'
-                      : 'border-white/5 bg-surface-3 hover:border-white/10'
+                      : 'border-ink/5 bg-surface-3 hover:border-ink/10'
                   )}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className="text-base">{g.icon}</span>
-                      <span className="text-sm font-medium text-white">{g.name}</span>
+                      <span className="text-sm font-medium text-ink">{g.name}</span>
                     </div>
-                    <span className="text-xs font-mono text-white/50">
+                    <span className="text-xs font-mono text-ink/70">
                       {formatCurrency(g.currentAmount)} / {formatCurrency(g.targetAmount)}
                     </span>
                   </div>

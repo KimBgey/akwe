@@ -111,7 +111,7 @@ export function TransactionHistory({
               'shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition',
               typeFilter === value
                 ? 'border-brand-500/40 bg-brand-500/10 text-brand-300'
-                : 'border-white/10 bg-surface-3 text-white/40 hover:text-white/70'
+                : 'border-ink/10 bg-surface-3 text-ink/60 hover:text-ink/70'
             )}
           >
             {label}
@@ -120,7 +120,7 @@ export function TransactionHistory({
 
         {usedCategories.length > 0 && (
           <>
-            <span className="w-px my-1 bg-white/10 shrink-0" />
+            <span className="w-px my-1 bg-ink/10 shrink-0" />
             {usedCategories.map((key) => {
               const cat = CATEGORIES[key]
               return (
@@ -132,7 +132,7 @@ export function TransactionHistory({
                     'shrink-0 flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition',
                     categoryFilter === key
                       ? 'border-brand-500/40 bg-brand-500/10 text-brand-300'
-                      : 'border-white/10 bg-surface-3 text-white/40 hover:text-white/70'
+                      : 'border-ink/10 bg-surface-3 text-ink/60 hover:text-ink/70'
                   )}
                 >
                   <span>{cat.emoji}</span>
@@ -145,7 +145,7 @@ export function TransactionHistory({
       </div>
 
       {groups.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 py-12 text-white/30">
+        <div className="flex flex-col items-center gap-3 py-12 text-ink/50">
           <ArrowLeftRight size={32} className="opacity-30" />
           <p className="text-sm">
             {hasActiveFilters ? 'Aucun résultat pour ces filtres' : 'Aucune transaction'}
@@ -157,19 +157,19 @@ export function TransactionHistory({
             const isOpen = openMonths.has(key)
             const net = income - expense
             return (
-              <div key={key} className="rounded-xl border border-white/5 overflow-hidden">
+              <div key={key} className="rounded-xl border border-ink/5 overflow-hidden">
                 <button
                   type="button"
                   onClick={() => toggleMonth(key)}
-                  className="flex w-full items-center justify-between gap-3 px-3 py-3 transition hover:bg-white/[0.02]"
+                  className="flex w-full items-center justify-between gap-3 px-3 py-3 transition hover:bg-ink/[0.02]"
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <ChevronDown
                       size={14}
-                      className={clsx('shrink-0 text-white/30 transition-transform', isOpen && 'rotate-180')}
+                      className={clsx('shrink-0 text-ink/50 transition-transform', isOpen && 'rotate-180')}
                     />
-                    <span className="text-sm font-semibold text-white truncate">{monthLabel(key)}</span>
-                    <span className="text-xs text-white/30 shrink-0">· {items.length}</span>
+                    <span className="text-sm font-semibold text-ink truncate">{monthLabel(key)}</span>
+                    <span className="text-xs text-ink/50 shrink-0">· {items.length}</span>
                   </div>
                   <span
                     className={clsx(
@@ -182,7 +182,7 @@ export function TransactionHistory({
                 </button>
 
                 {isOpen && (
-                  <div className="flex flex-col divide-y divide-white/[0.04] px-3 pb-1 border-t border-white/5">
+                  <div className="flex flex-col divide-y divide-ink/[0.04] px-3 pb-1 border-t border-ink/5">
                     {items.map((tx) => (
                       <TransactionRow key={tx.id} tx={tx} envelopes={envelopes} goalWallets={goalWallets} />
                     ))}

@@ -54,11 +54,11 @@ export function Dashboard({ uid }: { uid: string }) {
     setRightPanel(
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50">
             Récentes
           </p>
           {hasTransactions && (
-            <span className="text-[10px] text-white/20">
+            <span className="text-[10px] text-ink/40">
               {state.transactions.length} transactions
             </span>
           )}
@@ -76,7 +76,7 @@ export function Dashboard({ uid }: { uid: string }) {
             </Card>
             <Link
               to="/history"
-              className="flex items-center justify-center gap-2 rounded-2xl border border-white/8 bg-surface-2 py-3 text-xs font-medium text-white/40 transition hover:bg-surface-3 hover:text-white/70"
+              className="flex items-center justify-center gap-2 rounded-2xl border border-ink/8 bg-surface-2 py-3 text-xs font-medium text-ink/60 transition hover:bg-surface-3 hover:text-ink/70"
             >
               <Clock size={12} />
               Voir tout l'historique
@@ -85,7 +85,7 @@ export function Dashboard({ uid }: { uid: string }) {
         ) : (
           <Card className="p-6 flex flex-col items-center gap-3 text-center">
             <p className="text-3xl">📋</p>
-            <p className="text-sm text-white/30">Aucune transaction pour le moment</p>
+            <p className="text-sm text-ink/50">Aucune transaction pour le moment</p>
           </Card>
         )}
       </div>
@@ -100,10 +100,10 @@ export function Dashboard({ uid }: { uid: string }) {
       {/* Header */}
       <div className="flex items-center justify-between gap-3 min-w-0">
         <div className="min-w-0">
-          <p className="text-[11px] uppercase tracking-widest text-white/30 truncate">
+          <p className="text-[11px] uppercase tracking-widest text-ink/50 truncate">
             {formatMonth(state.currentMonth)}
           </p>
-          <h1 className="text-xl font-bold text-white leading-tight truncate">Tableau de bord</h1>
+          <h1 className="text-xl font-bold text-ink leading-tight truncate">Tableau de bord</h1>
         </div>
         <div className="shrink-0">
           <UserMenu syncStatus={syncStatus} />
@@ -114,23 +114,23 @@ export function Dashboard({ uid }: { uid: string }) {
       <div className="relative overflow-hidden rounded-2xl bg-gradient-brand p-px shadow-glow-brand">
         <div className="relative rounded-2xl bg-surface-1 px-5 py-4 overflow-hidden">
           <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-brand-500/15 blur-2xl pointer-events-none" />
-          <p className="text-[11px] uppercase tracking-widest text-white/30 mb-1">Patrimoine mensuel</p>
-          <p className="text-3xl font-bold text-white font-mono leading-none mb-1">
+          <p className="text-[11px] uppercase tracking-widest text-ink/50 mb-1">Patrimoine mensuel</p>
+          <p className="text-3xl font-bold text-ink font-mono leading-none mb-1">
             {formatCurrency(totalAssets)}
           </p>
-          <p className="text-xs text-white/40 mb-4">
+          <p className="text-xs text-ink/60 mb-4">
             dont{' '}
             <span className="font-semibold text-accent-emerald">{formatCurrency(freeBalance)}</span>
             {' '}disponible
           </p>
-          <div className="grid grid-cols-3 gap-2 border-t border-white/5 pt-3">
+          <div className="grid grid-cols-3 gap-2 border-t border-ink/5 pt-3">
             {[
               { icon: Lock,   label: 'Épargne',    value: formatCurrency(lockedBalance),       color: 'text-accent-violet' },
               { icon: Target, label: 'Objectifs',   value: formatCurrency(totalGoals),          color: 'text-accent-emerald' },
               { icon: Wallet, label: 'Revenu mois', value: formatCurrency(state.monthlyIncome), color: 'text-brand-300' },
             ].map(({ icon: Icon, label, value, color }) => (
               <div key={label} className="flex flex-col gap-0.5">
-                <div className="flex items-center gap-1 text-white/30">
+                <div className="flex items-center gap-1 text-ink/50">
                   <Icon size={10} />
                   <span className="text-[10px] uppercase tracking-wider">{label}</span>
                 </div>
@@ -157,13 +157,13 @@ export function Dashboard({ uid }: { uid: string }) {
             </div>
           </button>
         ) : (
-          <div className="flex items-center gap-3 rounded-2xl border border-white/5 bg-surface-2 px-4 py-3.5 opacity-60">
+          <div className="flex items-center gap-3 rounded-2xl border border-ink/5 bg-surface-2 px-4 py-3.5 opacity-60">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-surface-3">
-              <CalendarClock size={16} className="text-white/30" />
+              <CalendarClock size={16} className="text-ink/50" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-white/40 leading-tight">Revenu mensuel</p>
-              <p className="text-[10px] text-white/30">
+              <p className="text-sm font-semibold text-ink/60 leading-tight">Revenu mensuel</p>
+              <p className="text-[10px] text-ink/50">
                 Prochain : {format(nextPay, 'd MMM', { locale: fr })}
               </p>
             </div>
@@ -172,40 +172,40 @@ export function Dashboard({ uid }: { uid: string }) {
 
         <button
           onClick={() => setShowUnexpected(true)}
-          className="flex items-center gap-3 rounded-2xl border border-white/10 bg-surface-2 px-4 py-3.5 text-left transition hover:bg-surface-3 active:scale-[.97]"
+          className="flex items-center gap-3 rounded-2xl border border-ink/10 bg-surface-2 px-4 py-3.5 text-left transition hover:bg-surface-3 active:scale-[.97]"
         >
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-surface-3">
-            <Banknote size={16} className="text-white/60" />
+            <Banknote size={16} className="text-ink/60" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-white/60 leading-tight">Inattendu</p>
-            <p className="text-[10px] text-white/30">Bonus, cadeau…</p>
+            <p className="text-sm font-semibold text-ink/60 leading-tight">Inattendu</p>
+            <p className="text-[10px] text-ink/50">Bonus, cadeau…</p>
           </div>
         </button>
 
         <button
           onClick={() => setShowExpense(true)}
-          className="flex items-center gap-3 rounded-2xl border border-white/10 bg-surface-2 px-4 py-3.5 text-left transition hover:bg-surface-3 active:scale-[.97]"
+          className="flex items-center gap-3 rounded-2xl border border-ink/10 bg-surface-2 px-4 py-3.5 text-left transition hover:bg-surface-3 active:scale-[.97]"
         >
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-surface-3">
-            <TrendingUp size={16} className="text-white/60" />
+            <TrendingUp size={16} className="text-ink/60" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-white/60 leading-tight">Dépense</p>
-            <p className="text-[10px] text-white/30">Enregistrer</p>
+            <p className="text-sm font-semibold text-ink/60 leading-tight">Dépense</p>
+            <p className="text-[10px] text-ink/50">Enregistrer</p>
           </div>
         </button>
 
         <button
           onClick={() => setShowTransfer(true)}
-          className="flex items-center gap-3 rounded-2xl border border-white/10 bg-surface-2 px-4 py-3.5 text-left transition hover:bg-surface-3 active:scale-[.97]"
+          className="flex items-center gap-3 rounded-2xl border border-ink/10 bg-surface-2 px-4 py-3.5 text-left transition hover:bg-surface-3 active:scale-[.97]"
         >
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-surface-3">
-            <ArrowRightLeft size={16} className="text-white/60" />
+            <ArrowRightLeft size={16} className="text-ink/60" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-white/60 leading-tight">Objectif</p>
-            <p className="text-[10px] text-white/30">Virer vers</p>
+            <p className="text-sm font-semibold text-ink/60 leading-tight">Objectif</p>
+            <p className="text-[10px] text-ink/50">Virer vers</p>
           </div>
         </button>
       </div>
@@ -220,10 +220,10 @@ export function Dashboard({ uid }: { uid: string }) {
             <Sparkles size={14} className="text-accent-amber" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-white">
+            <p className="text-sm font-semibold text-ink">
               Reliquat de {formatMonth(state.lastIncomeMonth || state.currentMonth)}
             </p>
-            <p className="text-xs text-white/40 truncate">
+            <p className="text-xs text-ink/60 truncate">
               {formatCurrency(freeBalance)} non utilisés — À gérer avant le nouveau revenu
             </p>
           </div>
@@ -233,7 +233,7 @@ export function Dashboard({ uid }: { uid: string }) {
 
       {/* Enveloppes */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30 mb-3">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50 mb-3">
           Enveloppes
         </p>
         <div className="grid grid-cols-2 gap-3">
@@ -246,7 +246,7 @@ export function Dashboard({ uid }: { uid: string }) {
       {/* Récentes — mobile uniquement */}
       {hasTransactions && (
         <Card className="p-4 lg:hidden">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30 mb-3">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50 mb-3">
             Récentes
           </p>
           <TransactionList
@@ -257,7 +257,7 @@ export function Dashboard({ uid }: { uid: string }) {
           />
           <Link
             to="/history"
-            className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-white/8 bg-surface-3 py-2.5 text-xs font-medium text-white/40 transition hover:text-white/70"
+            className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-ink/8 bg-surface-3 py-2.5 text-xs font-medium text-ink/60 transition hover:text-ink/70"
           >
             <Clock size={12} />
             Voir tout l'historique

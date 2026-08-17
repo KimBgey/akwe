@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { GoalWallet } from '@/types'
 import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
@@ -15,9 +15,11 @@ interface AddGoalModalProps {
   open: boolean
   onClose: () => void
   onAdd: (goal: Omit<GoalWallet, 'id' | 'createdAt' | 'spentAmount' | 'allocatedAmount' | 'currentAmount'>) => void
+  onUpdate: (update: Partial<GoalWallet> & { id: string }) => void
+  goal?: GoalWallet | null
 }
 
-export function AddGoalModal({ open, onClose, onAdd }: AddGoalModalProps) {
+export function AddGoalModal({ open, onClose, onAdd, onUpdate, goal }: AddGoalModalProps) {
   const [name, setName] = useState('')
   const [targetAmount, setTargetAmount] = useState('')
   const [monthlyContribution, setMonthlyContribution] = useState('')
@@ -25,6 +27,8 @@ export function AddGoalModal({ open, onClose, onAdd }: AddGoalModalProps) {
   const [icon, setIcon] = useState('🎯')
   const [color, setColor] = useState(COLORS[0])
   const [error, setError] = useState('')
+
+  const isEditing = Boolean(goal)
 
   function reset() {
     setName('')
@@ -36,6 +40,23 @@ export function AddGoalModal({ open, onClose, onAdd }: AddGoalModalProps) {
     setError('')
   }
 
+  // Préremplit les champs à l'ouverture, selon qu'on édite ou qu'on crée
+  useEffect(() => {
+    if (!open) return
+    if (goal) {
+      setName(goal.name)
+      setTargetAmount(String(goal.targetAmount))
+      setMonthlyContribution(String(goal.monthlyContribution))
+      setDeadline(goal.deadline ? goal.deadline.slice(0, 10) : '')
+      setIcon(goal.icon)
+      setColor(goal.color)
+      setError('')
+    } else {
+      reset()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, goal])
+
   function handleSubmit() {
     setError('')
     if (!name.trim()) return setError('Nom requis')
@@ -44,27 +65,36 @@ export function AddGoalModal({ open, onClose, onAdd }: AddGoalModalProps) {
     if (isNaN(target) || target <= 0) return setError('Montant cible invalide')
     if (isNaN(contribution) || contribution <= 0) return setError('Contribution mensuelle invalide')
 
-    onAdd({
+    const payload = {
       name: name.trim(),
-      type: 'goal',
       targetAmount: target,
       monthlyContribution: contribution,
       deadline: deadline ? new Date(deadline).toISOString() : null,
-      status: 'active',
       icon,
       color,
-    })
+    }
+
+    if (goal) {
+      onUpdate({ id: goal.id, ...payload })
+    } else {
+      onAdd({ ...payload, type: 'goal', status: 'active' })
+    }
     reset()
     onClose()
   }
 
   return (
-    <Modal open={open} onClose={() => { reset(); onClose() }} title="Nouvel objectif" size="lg">
+    <Modal
+      open={open}
+      onClose={() => { reset(); onClose() }}
+      title={isEditing ? "Modifier l'objectif" : 'Nouvel objectif'}
+      size="lg"
+    >
       <div className="flex flex-col gap-5">
         {/* Icône + Couleur */}
         <div className="flex gap-4">
           <div className="flex flex-col gap-1.5 flex-1">
-            <label className="text-xs font-medium uppercase tracking-widest text-white/40">Icône</label>
+            <label className="text-xs font-medium uppercase tracking-widest text-ink/60">Icône</label>
             <div className="grid grid-cols-4 gap-1.5">
               {ICONS.map((ic) => (
                 <button
@@ -75,7 +105,7 @@ export function AddGoalModal({ open, onClose, onAdd }: AddGoalModalProps) {
                     'flex h-9 items-center justify-center rounded-lg text-lg transition',
                     icon === ic
                       ? 'bg-brand-500/20 border border-brand-500/40'
-                      : 'bg-surface-3 border border-transparent hover:border-white/10'
+                      : 'bg-surface-3 border border-transparent hover:border-ink/10'
                   )}
                 >
                   {ic}
@@ -85,7 +115,7 @@ export function AddGoalModal({ open, onClose, onAdd }: AddGoalModalProps) {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium uppercase tracking-widest text-white/40">Couleur</label>
+            <label className="text-xs font-medium uppercase tracking-widest text-ink/60">Couleur</label>
             <div className="grid grid-cols-2 gap-1.5">
               {COLORS.map((c) => (
                 <button
@@ -144,7 +174,7 @@ export function AddGoalModal({ open, onClose, onAdd }: AddGoalModalProps) {
             Annuler
           </Button>
           <Button fullWidth onClick={handleSubmit}>
-            Créer l'objectif
+            {isEditing ? 'Enregistrer' : "Créer l'objectif"}
           </Button>
         </div>
       </div>

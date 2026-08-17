@@ -144,8 +144,8 @@ export function UnexpectedIncomeModal({ open, onClose, goals, onSubmit }: Unexpe
               <Coins size={18} className="text-accent-cyan" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-white">Stocker dans Bonus mensuel</p>
-              <p className="text-xs text-white/40">Disponible librement, sans règle</p>
+              <p className="text-sm font-semibold text-ink">Stocker dans Bonus mensuel</p>
+              <p className="text-xs text-ink/60">Disponible librement, sans règle</p>
             </div>
             <div className="rounded-full bg-accent-cyan/15 px-2.5 py-0.5">
               <span className="text-[10px] font-bold text-accent-cyan uppercase tracking-wider">Défaut</span>
@@ -156,7 +156,7 @@ export function UnexpectedIncomeModal({ open, onClose, goals, onSubmit }: Unexpe
           <div className="flex flex-col gap-2">
             <button
               onClick={() => setShowAlternative((v) => !v)}
-              className="flex items-center gap-2 self-start text-xs text-white/40 hover:text-white/60 transition"
+              className="flex items-center gap-2 self-start text-xs text-ink/60 hover:text-ink/60 transition"
             >
               {showAlternative ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
               Affecter autrement
@@ -175,15 +175,15 @@ export function UnexpectedIncomeModal({ open, onClose, goals, onSubmit }: Unexpe
                         onClick={() => setAllocation(opt.id)}
                         className={clsx(
                           'flex flex-col gap-2 rounded-2xl border p-3 text-left transition',
-                          selected ? opt.bgClass : 'border-white/5 bg-surface-3 hover:border-white/10'
+                          selected ? opt.bgClass : 'border-ink/5 bg-surface-3 hover:border-ink/10'
                         )}
                       >
-                        <Icon size={15} className={selected ? opt.iconClass : 'text-white/30'} />
+                        <Icon size={15} className={selected ? opt.iconClass : 'text-ink/50'} />
                         <div>
-                          <p className={clsx('text-xs font-semibold leading-tight', selected ? 'text-white' : 'text-white/50')}>
+                          <p className={clsx('text-xs font-semibold leading-tight', selected ? 'text-ink' : 'text-ink/70')}>
                             {opt.label}
                           </p>
-                          <p className="text-[10px] text-white/30 mt-0.5">{opt.description}</p>
+                          <p className="text-[10px] text-ink/50 mt-0.5">{opt.description}</p>
                         </div>
                       </button>
                     )
@@ -205,13 +205,13 @@ export function UnexpectedIncomeModal({ open, onClose, goals, onSubmit }: Unexpe
         <div className="flex flex-col gap-4">
           <button
             onClick={() => setStep('main')}
-            className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/60 transition self-start"
+            className="flex items-center gap-1.5 text-xs text-ink/60 hover:text-ink/60 transition self-start"
           >
             ← Retour
           </button>
 
-          <div className="rounded-xl bg-surface-3 border border-white/5 px-4 py-2.5 flex justify-between items-center">
-            <span className="text-xs text-white/40">À verser vers objectif</span>
+          <div className="rounded-xl bg-surface-3 border border-ink/5 px-4 py-2.5 flex justify-between items-center">
+            <span className="text-xs text-ink/60">À verser vers objectif</span>
             <span className="text-sm font-bold font-mono text-accent-emerald">{formatCurrency(num)}</span>
           </div>
 
@@ -224,20 +224,20 @@ export function UnexpectedIncomeModal({ open, onClose, goals, onSubmit }: Unexpe
                   'w-full text-left rounded-xl border p-3 transition',
                   goalId === g.id
                     ? 'border-accent-emerald/40 bg-accent-emerald/5'
-                    : 'border-white/5 bg-surface-3 hover:border-white/10'
+                    : 'border-ink/5 bg-surface-3 hover:border-ink/10'
                 )}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
                     <span className="text-base">{g.icon}</span>
-                    <span className="text-sm font-medium text-white">{g.name}</span>
+                    <span className="text-sm font-medium text-ink">{g.name}</span>
                   </div>
-                  <span className="text-xs font-mono text-white/40">
+                  <span className="text-xs font-mono text-ink/60">
                     {Math.round(getProgress(g) * 100)}%
                   </span>
                 </div>
                 <ProgressBar value={getProgress(g)} color="emerald" size="sm" />
-                <div className="flex justify-between text-[10px] text-white/30 mt-1">
+                <div className="flex justify-between text-[10px] text-ink/50 mt-1">
                   <span>{formatCurrency(g.currentAmount)}</span>
                   <span>{formatCurrency(g.targetAmount)}</span>
                 </div>

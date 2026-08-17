@@ -52,24 +52,24 @@ export function IncomeModal({ open, onClose, onSubmit, distributionRules, envelo
         />
 
         {num > 0 && (
-          <div className="rounded-2xl border border-white/5 bg-surface-3 p-4">
+          <div className="rounded-2xl border border-ink/5 bg-surface-3 p-4">
             <div className="flex items-center gap-2 mb-3">
               <Zap size={13} className="text-brand-400" />
-              <span className="text-xs font-semibold uppercase tracking-widest text-white/40">
+              <span className="text-xs font-semibold uppercase tracking-widest text-ink/60">
                 Distribution automatique
               </span>
             </div>
             <div className="flex flex-col gap-2">
               {distributionRules.map((rule) => (
                 <div key={rule.envelopeId} className="flex justify-between text-sm">
-                  <span className="text-white/60">{getEnvName(rule.envelopeId)}</span>
-                  <span className="font-mono font-semibold text-white">
+                  <span className="text-ink/60">{getEnvName(rule.envelopeId)}</span>
+                  <span className="font-mono font-semibold text-ink">
                     {formatCurrency(getRuleAmount(rule))}
                   </span>
                 </div>
               ))}
-              <div className="flex justify-between text-sm border-t border-white/5 pt-2 mt-1">
-                <span className="text-white/60">Solde courant (reste)</span>
+              <div className="flex justify-between text-sm border-t border-ink/5 pt-2 mt-1">
+                <span className="text-ink/60">Solde courant (reste)</span>
                 <span className="font-mono font-semibold text-accent-emerald">
                   {formatCurrency(freeAmount)}
                 </span>

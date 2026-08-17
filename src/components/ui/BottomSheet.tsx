@@ -32,20 +32,20 @@ export function BottomSheet({ open, onClose, title, children }: BottomSheetProps
       {/* Panel — bottom sheet sur mobile, modal centré sur desktop */}
       <div className="
         relative z-10 w-full bg-surface-1 animate-fade-up flex flex-col
-        rounded-t-3xl border-t border-white/10 max-h-[92vh]
-        md:rounded-3xl md:border md:border-white/10 md:max-w-md md:max-h-[85vh] md:shadow-[0_24px_80px_rgba(0,0,0,0.6)]
+        rounded-t-3xl border-t border-ink/10 max-h-[92vh]
+        md:rounded-3xl md:border md:border-ink/10 md:max-w-md md:max-h-[85vh] md:shadow-[0_24px_80px_rgb(var(--shadow-ambient)/calc(0.6*var(--shadow-scale)))]
       ">
         {/* Drag handle — mobile uniquement */}
         <div className="flex justify-center pt-3 pb-1 shrink-0 md:hidden">
-          <div className="h-1 w-10 rounded-full bg-white/15" />
+          <div className="h-1 w-10 rounded-full bg-ink/15" />
         </div>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 shrink-0 border-b border-white/5">
-          <h2 className="text-base font-semibold text-white">{title}</h2>
+        <div className="flex items-center justify-between px-5 py-4 shrink-0 border-b border-ink/5">
+          <h2 className="text-base font-semibold text-ink">{title}</h2>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-white/40 transition hover:bg-white/5 hover:text-white"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-ink/60 transition hover:bg-ink/5 hover:text-ink"
           >
             <X size={16} />
           </button>

@@ -10,7 +10,7 @@ const VARIANTS: Record<BadgeVariant, string> = {
   bonus:     'bg-accent-cyan/10 text-accent-cyan border-accent-cyan/20',
   active:    'bg-accent-emerald/10 text-accent-emerald border-accent-emerald/20',
   completed: 'bg-brand-500/10 text-brand-400 border-brand-500/20',
-  paused:    'bg-white/5 text-white/40 border-white/10',
+  paused:    'bg-ink/5 text-ink/60 border-ink/10',
 }
 
 const LABELS: Record<BadgeVariant, string> = {

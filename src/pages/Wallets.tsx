@@ -21,7 +21,7 @@ function GoalsSummaryPanel({ goals }: { goals: GoalWallet[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">
+      <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50">
         Vue d'ensemble
       </p>
 
@@ -30,30 +30,30 @@ function GoalsSummaryPanel({ goals }: { goals: GoalWallet[] }) {
         <div>
           <div className="flex justify-between items-end mb-2">
             <div>
-              <p className="text-[10px] uppercase tracking-widest text-white/30 mb-0.5">Total épargné</p>
-              <p className="text-xl font-bold font-mono text-white">{formatCurrency(totalSaved)}</p>
+              <p className="text-[10px] uppercase tracking-widest text-ink/50 mb-0.5">Total épargné</p>
+              <p className="text-xl font-bold font-mono text-ink">{formatCurrency(totalSaved)}</p>
             </div>
-            <p className="text-xs font-mono text-white/40">{Math.round(globalPct * 100)}%</p>
+            <p className="text-xs font-mono text-ink/60">{Math.round(globalPct * 100)}%</p>
           </div>
           <ProgressBar value={globalPct} color="emerald" />
           {totalTarget > 0 && (
-            <p className="text-[10px] text-white/30 mt-1.5">
+            <p className="text-[10px] text-ink/50 mt-1.5">
               sur {formatCurrency(totalTarget)} visés
             </p>
           )}
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 gap-2 border-t border-white/5 pt-3">
+        <div className="grid grid-cols-2 gap-2 border-t border-ink/5 pt-3">
           <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1.5 text-white/30">
+            <div className="flex items-center gap-1.5 text-ink/50">
               <TrendingUp size={11} />
               <span className="text-[10px] uppercase tracking-wider">En cours</span>
             </div>
-            <p className="text-lg font-bold text-white">{active.length}</p>
+            <p className="text-lg font-bold text-ink">{active.length}</p>
           </div>
           <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1.5 text-white/30">
+            <div className="flex items-center gap-1.5 text-ink/50">
               <Trophy size={11} />
               <span className="text-[10px] uppercase tracking-wider">Atteints</span>
             </div>
@@ -63,8 +63,8 @@ function GoalsSummaryPanel({ goals }: { goals: GoalWallet[] }) {
 
         {/* Active goals compact list */}
         {active.length > 0 && (
-          <div className="flex flex-col gap-2 border-t border-white/5 pt-3">
-            <p className="text-[10px] uppercase tracking-widest text-white/20 mb-1">Objectifs actifs</p>
+          <div className="flex flex-col gap-2 border-t border-ink/5 pt-3">
+            <p className="text-[10px] uppercase tracking-widest text-ink/40 mb-1">Objectifs actifs</p>
             {active.map((g) => {
               const pct = g.targetAmount > 0 ? Math.min(g.currentAmount / g.targetAmount, 1) : 0
               return (
@@ -72,9 +72,9 @@ function GoalsSummaryPanel({ goals }: { goals: GoalWallet[] }) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <span className="text-sm">{g.icon}</span>
-                      <span className="text-xs font-medium text-white/70 truncate max-w-[110px]">{g.name}</span>
+                      <span className="text-xs font-medium text-ink/70 truncate max-w-[110px]">{g.name}</span>
                     </div>
-                    <span className="text-[10px] font-mono text-white/40 shrink-0">
+                    <span className="text-[10px] font-mono text-ink/60 shrink-0">
                       {Math.round(pct * 100)}%
                     </span>
                   </div>
@@ -86,7 +86,7 @@ function GoalsSummaryPanel({ goals }: { goals: GoalWallet[] }) {
         )}
 
         {goals.length === 0 && (
-          <p className="text-xs text-white/30 text-center py-2">Aucun objectif créé</p>
+          <p className="text-xs text-ink/50 text-center py-2">Aucun objectif créé</p>
         )}
       </Card>
     </div>
@@ -94,10 +94,11 @@ function GoalsSummaryPanel({ goals }: { goals: GoalWallet[] }) {
 }
 
 export function Wallets({ uid }: { uid: string }) {
-  const { state, addGoal, transferToGoal } = useBudget(uid)
+  const { state, addGoal, updateGoal, deleteGoal, transferToGoal } = useBudget(uid)
   const setRightPanel = useRightPanel()
 
   const [showAdd, setShowAdd]           = useState(false)
+  const [editingGoal, setEditingGoal]   = useState<GoalWallet | null>(null)
   const [showTransfer, setShowTransfer] = useState(false)
   const [selectedGoal, setSelectedGoal] = useState<GoalWallet | null>(null)
 
@@ -116,15 +117,25 @@ export function Wallets({ uid }: { uid: string }) {
     setShowTransfer(true)
   }
 
+  function handleEditGoal(goal: GoalWallet) {
+    setEditingGoal(goal)
+    setShowAdd(true)
+  }
+
+  function closeAddModal() {
+    setShowAdd(false)
+    setEditingGoal(null)
+  }
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between gap-3 min-w-0">
         <div className="min-w-0">
-          <p className="text-[11px] uppercase tracking-widest text-white/30">Portefeuilles</p>
-          <h1 className="text-xl font-bold text-white leading-tight truncate">Objectifs</h1>
+          <p className="text-[11px] uppercase tracking-widest text-ink/50">Portefeuilles</p>
+          <h1 className="text-xl font-bold text-ink leading-tight truncate">Objectifs</h1>
         </div>
         <div className="shrink-0">
-          <Button onClick={() => setShowAdd(true)} size="sm">
+          <Button onClick={() => { setEditingGoal(null); setShowAdd(true) }} size="sm">
             <Plus size={14} />
             Nouveau
           </Button>
@@ -134,7 +145,7 @@ export function Wallets({ uid }: { uid: string }) {
       {/* Free balance reminder */}
       <Card className="flex items-center justify-between gap-4 py-4">
         <div>
-          <p className="text-xs uppercase tracking-widest text-white/30 mb-1">Solde disponible</p>
+          <p className="text-xs uppercase tracking-widest text-ink/50 mb-1">Solde disponible</p>
           <p className="text-xl font-bold font-mono text-accent-emerald">{formatCurrency(freeBalance)}</p>
         </div>
         <Button variant="secondary" size="sm" onClick={() => setShowTransfer(true)}>
@@ -146,12 +157,19 @@ export function Wallets({ uid }: { uid: string }) {
       {/* Active goals */}
       {activeGoals.length > 0 && (
         <div>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-white/30 mb-4">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-ink/50 mb-4">
             En cours ({activeGoals.length})
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {activeGoals.map((g) => (
-              <GoalCard key={g.id} goal={g} onClick={() => handleGoalClick(g)} />
+              <GoalCard
+                key={g.id}
+                goal={g}
+                onClick={() => handleGoalClick(g)}
+                onEdit={() => handleEditGoal(g)}
+                onMarkAchieved={() => updateGoal({ id: g.id, status: 'completed' })}
+                onDelete={() => deleteGoal(g.id)}
+              />
             ))}
           </div>
         </div>
@@ -160,12 +178,17 @@ export function Wallets({ uid }: { uid: string }) {
       {/* Completed goals */}
       {completedGoals.length > 0 && (
         <div>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-white/30 mb-4">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-ink/50 mb-4">
             Atteints ({completedGoals.length})
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {completedGoals.map((g) => (
-              <GoalCard key={g.id} goal={g} />
+              <GoalCard
+                key={g.id}
+                goal={g}
+                onEdit={() => handleEditGoal(g)}
+                onDelete={() => deleteGoal(g.id)}
+              />
             ))}
           </div>
         </div>
@@ -173,20 +196,26 @@ export function Wallets({ uid }: { uid: string }) {
 
       {/* Empty state */}
       {state.goalWallets.length === 0 && (
-        <div className="flex flex-col items-center gap-4 py-16 text-white/30">
+        <div className="flex flex-col items-center gap-4 py-16 text-ink/50">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-2 text-3xl">🎯</div>
           <div className="text-center">
-            <p className="text-sm font-semibold text-white/50">Aucun objectif</p>
+            <p className="text-sm font-semibold text-ink/70">Aucun objectif</p>
             <p className="text-xs mt-1">Crée ton premier portefeuille objectif</p>
           </div>
-          <Button onClick={() => setShowAdd(true)}>
+          <Button onClick={() => { setEditingGoal(null); setShowAdd(true) }}>
             <Plus size={14} />
             Créer un objectif
           </Button>
         </div>
       )}
 
-      <AddGoalModal open={showAdd} onClose={() => setShowAdd(false)} onAdd={addGoal} />
+      <AddGoalModal
+        open={showAdd}
+        onClose={closeAddModal}
+        onAdd={addGoal}
+        onUpdate={updateGoal}
+        goal={editingGoal}
+      />
       <TransferModal
         open={showTransfer}
         onClose={() => { setShowTransfer(false); setSelectedGoal(null) }}

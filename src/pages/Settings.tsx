@@ -122,7 +122,7 @@ export function Settings({ uid }: { uid: string }) {
 
     setRightPanel(
       <div className="flex flex-col gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50">
           Compte
         </p>
 
@@ -141,25 +141,25 @@ export function Settings({ uid }: { uid: string }) {
               </div>
             )}
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-white truncate">
+              <p className="text-sm font-semibold text-ink truncate">
                 {user?.displayName || 'Utilisateur'}
               </p>
-              <p className="text-xs text-white/40 truncate">{user?.email}</p>
+              <p className="text-xs text-ink/60 truncate">{user?.email}</p>
             </div>
           </div>
 
           {/* Sync status */}
           <div className="flex items-center gap-2 rounded-xl bg-surface-3 px-3 py-2.5">
             {syncIcon}
-            <span className="text-xs text-white/50">{syncLabel}</span>
+            <span className="text-xs text-ink/70">{syncLabel}</span>
           </div>
         </Card>
 
         {/* Data overview */}
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-3">
-            <Database size={13} className="text-white/30" />
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">
+            <Database size={13} className="text-ink/50" />
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50">
               Données
             </p>
           </div>
@@ -170,34 +170,34 @@ export function Settings({ uid }: { uid: string }) {
               { icon: Target,      label: 'Objectifs',     value: gCount },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label} className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-white/40">
+                <div className="flex items-center gap-2 text-ink/60">
                   <Icon size={12} />
                   <span className="text-xs">{label}</span>
                 </div>
-                <span className="text-xs font-bold font-mono text-white/60">{value}</span>
+                <span className="text-xs font-bold font-mono text-ink/60">{value}</span>
               </div>
             ))}
           </div>
-          <div className="mt-4 border-t border-white/5 pt-3">
+          <div className="mt-4 border-t border-ink/5 pt-3">
             {!confirmingSignOut ? (
               <button
                 onClick={() => setConfirmingSignOut(true)}
-                className="flex w-full items-center gap-3 rounded-xl border border-white/8 bg-surface-3 px-3 py-2.5 text-left transition hover:border-accent-rose/25 hover:bg-accent-rose/5 group"
+                className="flex w-full items-center gap-3 rounded-xl border border-ink/8 bg-surface-3 px-3 py-2.5 text-left transition hover:border-accent-rose/25 hover:bg-accent-rose/5 group"
               >
-                <LogOut size={14} className="text-white/30 group-hover:text-accent-rose transition shrink-0" />
-                <span className="text-sm text-white/50 group-hover:text-white/70 transition">
+                <LogOut size={14} className="text-ink/50 group-hover:text-accent-rose transition shrink-0" />
+                <span className="text-sm text-ink/70 group-hover:text-ink/70 transition">
                   Se déconnecter
                 </span>
               </button>
             ) : (
               <div className="rounded-xl border border-accent-rose/25 bg-accent-rose/5 p-3 flex flex-col gap-3">
-                <p className="text-xs text-white/60 leading-relaxed">
+                <p className="text-xs text-ink/60 leading-relaxed">
                   Tu seras redirigé vers la page de connexion.
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => setConfirmingSignOut(false)}
-                    className="rounded-xl border border-white/10 bg-surface-3 py-2 text-xs font-medium text-white/50 transition hover:text-white/80"
+                    className="rounded-xl border border-ink/10 bg-surface-3 py-2 text-xs font-medium text-ink/70 transition hover:text-ink/80"
                   >
                     Annuler
                   </button>
@@ -223,13 +223,13 @@ export function Settings({ uid }: { uid: string }) {
 
       {/* Header */}
       <div>
-        <p className="text-[11px] uppercase tracking-widest text-white/30">Configuration</p>
-        <h1 className="text-2xl font-bold text-white leading-tight">Réglages</h1>
+        <p className="text-[11px] uppercase tracking-widest text-ink/50">Configuration</p>
+        <h1 className="text-2xl font-bold text-ink leading-tight">Réglages</h1>
       </div>
 
       {/* ── Profil ─────────────────────────────────────────────────────────────── */}
       <section className="flex flex-col gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">Profil</p>
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50">Profil</p>
 
         <Card className="p-5">
           {/* Avatar + name + email */}
@@ -270,25 +270,25 @@ export function Settings({ uid }: { uid: string }) {
                   </button>
                   <button
                     onClick={() => setEditingName(false)}
-                    className="h-9 w-9 shrink-0 rounded-xl bg-surface-3 text-white/40 flex items-center justify-center hover:text-white transition"
+                    className="h-9 w-9 shrink-0 rounded-xl bg-surface-3 text-ink/60 flex items-center justify-center hover:text-ink transition"
                   >
                     <X size={14} />
                   </button>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <p className="text-base font-semibold text-white truncate">
+                  <p className="text-base font-semibold text-ink truncate">
                     {user?.displayName || 'Utilisateur'}
                   </p>
                   <button
                     onClick={() => { setNameValue(user?.displayName ?? ''); setEditingName(true) }}
-                    className="h-7 w-7 shrink-0 flex items-center justify-center rounded-lg bg-surface-3 text-white/30 hover:text-white transition"
+                    className="h-7 w-7 shrink-0 flex items-center justify-center rounded-lg bg-surface-3 text-ink/50 hover:text-ink transition"
                   >
                     <Pencil size={12} />
                   </button>
                 </div>
               )}
-              <p className="text-xs text-white/40 mt-0.5 truncate">{user?.email}</p>
+              <p className="text-xs text-ink/60 mt-0.5 truncate">{user?.email}</p>
             </div>
           </div>
 
@@ -297,12 +297,12 @@ export function Settings({ uid }: { uid: string }) {
 
       {/* ── Jour de virement ───────────────────────────────────────────────────── */}
       <section className="flex flex-col gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">Budget</p>
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50">Budget</p>
 
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-3">
             <CalendarDays size={14} className="text-brand-400" />
-            <p className="text-xs font-semibold text-white/60">Jour de virement salaire</p>
+            <p className="text-xs font-semibold text-ink/60">Jour de virement salaire</p>
           </div>
           <div className="grid grid-cols-4 gap-2">
             {PAY_DAY_OPTIONS.map((d) => (
@@ -313,23 +313,23 @@ export function Settings({ uid }: { uid: string }) {
                   'rounded-xl border py-2.5 text-sm font-bold transition',
                   state.payDay === d
                     ? 'border-brand-500/40 bg-brand-500/15 text-brand-300'
-                    : 'border-white/8 bg-surface-3 text-white/40 hover:border-white/20 hover:text-white/70'
+                    : 'border-ink/8 bg-surface-3 text-ink/60 hover:border-ink/20 hover:text-ink/70'
                 )}
               >
                 {d}
               </button>
             ))}
           </div>
-          <p className="mt-2.5 text-[11px] text-white/30">
+          <p className="mt-2.5 text-[11px] text-ink/50">
             Le bouton "Revenu mensuel" se débloque le{' '}
-            <span className="font-semibold text-white/50">{state.payDay}</span> de chaque mois.
+            <span className="font-semibold text-ink/70">{state.payDay}</span> de chaque mois.
           </p>
         </Card>
       </section>
 
       {/* ── Répartition automatique ────────────────────────────────────────────── */}
       <section className="flex flex-col gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50">
           Répartition automatique
         </p>
 
@@ -341,8 +341,8 @@ export function Settings({ uid }: { uid: string }) {
               <Card key={env.id} className="!p-3.5">
                 <div className="flex items-center justify-between gap-4">
                   <div>
-                    <p className="text-sm font-semibold text-white">{env.name}</p>
-                    <p className="text-xs text-white/30 capitalize">{env.type}</p>
+                    <p className="text-sm font-semibold text-ink">{env.name}</p>
+                    <p className="text-xs text-ink/50 capitalize">{env.type}</p>
                   </div>
                   {isEditing ? (
                     <div className="flex items-center gap-2">
@@ -366,12 +366,12 @@ export function Settings({ uid }: { uid: string }) {
                     </div>
                   ) : (
                     <div className="flex items-center gap-3">
-                      <span className="text-sm font-bold font-mono text-white">
+                      <span className="text-sm font-bold font-mono text-ink">
                         {rule ? `${rule.amount.toLocaleString('fr-FR')} F` : '— F'}
                       </span>
                       <button
                         onClick={() => startEditRule(env.id)}
-                        className="h-8 w-8 flex items-center justify-center rounded-lg bg-surface-3 text-white/40 hover:text-white transition"
+                        className="h-8 w-8 flex items-center justify-center rounded-lg bg-surface-3 text-ink/60 hover:text-ink transition"
                       >
                         <Pencil size={13} />
                       </button>
@@ -382,7 +382,7 @@ export function Settings({ uid }: { uid: string }) {
             )
           })}
         </div>
-        <p className="text-[11px] text-white/30">
+        <p className="text-[11px] text-ink/50">
           Le reste va automatiquement dans le solde courant.
         </p>
       </section>
@@ -390,7 +390,7 @@ export function Settings({ uid }: { uid: string }) {
       {/* ── Comment ça marche ─────────────────────────────────────────────────── */}
       <section className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50">
             Comment ça marche
           </p>
           <Link
@@ -406,23 +406,23 @@ export function Settings({ uid }: { uid: string }) {
           {FAQ.map((item, i) => (
             <div
               key={i}
-              className="rounded-2xl border border-white/8 bg-surface-2 overflow-hidden"
+              className="rounded-2xl border border-ink/8 bg-surface-2 overflow-hidden"
             >
               <button
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
                 className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left"
               >
-                <span className="text-sm font-medium text-white/70">{item.q}</span>
+                <span className="text-sm font-medium text-ink/70">{item.q}</span>
                 <ChevronDown
                   size={14}
                   className={clsx(
-                    'shrink-0 text-white/30 transition-transform duration-200',
+                    'shrink-0 text-ink/50 transition-transform duration-200',
                     openFaq === i && 'rotate-180'
                   )}
                 />
               </button>
               {openFaq === i && (
-                <div className="px-4 pb-4 text-xs text-white/45 leading-relaxed border-t border-white/5 pt-3">
+                <div className="px-4 pb-4 text-xs text-ink/65 leading-relaxed border-t border-ink/5 pt-3">
                   {item.a}
                 </div>
               )}
@@ -432,8 +432,8 @@ export function Settings({ uid }: { uid: string }) {
       </section>
 
       {/* ── Zone de danger ─────────────────────────────────────────────────────── */}
-      <section className="flex flex-col gap-3 pt-2 border-t border-white/5">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/20">
+      <section className="flex flex-col gap-3 pt-2 border-t border-ink/5">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/40">
           Zone de danger
         </p>
 
@@ -449,7 +449,7 @@ export function Settings({ uid }: { uid: string }) {
               <p className="text-sm font-semibold text-accent-rose leading-tight">
                 Réinitialiser toutes les données
               </p>
-              <p className="text-[10px] text-white/30 mt-0.5">
+              <p className="text-[10px] text-ink/50 mt-0.5">
                 Enveloppes, transactions, objectifs — tout sera effacé
               </p>
             </div>
@@ -459,8 +459,8 @@ export function Settings({ uid }: { uid: string }) {
             <div className="flex items-start gap-3">
               <AlertTriangle size={16} className="text-accent-rose shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm font-semibold text-white">Confirmer la réinitialisation</p>
-                <p className="text-xs text-white/40 mt-0.5">
+                <p className="text-sm font-semibold text-ink">Confirmer la réinitialisation</p>
+                <p className="text-xs text-ink/60 mt-0.5">
                   Cette action est irréversible. Toutes tes enveloppes, transactions et objectifs
                   seront définitivement supprimés.
                 </p>

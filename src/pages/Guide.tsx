@@ -83,20 +83,20 @@ const FEATURES = [
   },
   {
     icon: Settings,
-    iconBg: 'bg-white/5',
-    iconColor: 'text-white/40',
+    iconBg: 'bg-ink/5',
+    iconColor: 'text-ink/60',
     title: 'Répartition automatique',
     tag: 'Réglages',
-    tagColor: 'bg-white/5 text-white/30',
+    tagColor: 'bg-ink/5 text-ink/50',
     desc: "Définis une fois combien va dans chaque enveloppe à chaque virement. Ex : 70 000 F → Épargne, 30 000 F → Charges. Le reste va en Solde courant.",
   },
   {
     icon: CalendarClock,
-    iconBg: 'bg-white/5',
-    iconColor: 'text-white/40',
+    iconBg: 'bg-ink/5',
+    iconColor: 'text-ink/60',
     title: 'Jour de virement',
     tag: 'Réglages',
-    tagColor: 'bg-white/5 text-white/30',
+    tagColor: 'bg-ink/5 text-ink/50',
     desc: "Choisis le jour où ton salaire arrive (ex : 25). Le bouton Revenu mensuel se débloque ce jour-là seulement.",
   },
 ]
@@ -154,7 +154,7 @@ export function Guide() {
   useEffect(() => {
     setRightPanel(
       <div className="flex flex-col gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50">
           Navigation rapide
         </p>
         <Card className="p-4 flex flex-col gap-0.5">
@@ -164,14 +164,14 @@ export function Guide() {
             { label: 'Fonctionnalités',      href: '#features' },
           ].map(({ label, href }) => (
             <a key={href} href={href}
-              className="flex items-center gap-2 rounded-lg px-2 py-2 text-xs text-white/50 transition hover:bg-surface-3 hover:text-white/80">
+              className="flex items-center gap-2 rounded-lg px-2 py-2 text-xs text-ink/70 transition hover:bg-surface-3 hover:text-ink/80">
               <span className="h-1 w-1 rounded-full bg-white/20 shrink-0" />
               {label}
             </a>
           ))}
         </Card>
         <Link to="/"
-          className="flex items-center justify-center gap-2 rounded-2xl border border-white/8 bg-surface-2 py-3 text-xs font-medium text-white/40 transition hover:bg-surface-3 hover:text-white/70">
+          className="flex items-center justify-center gap-2 rounded-2xl border border-ink/8 bg-surface-2 py-3 text-xs font-medium text-ink/60 transition hover:bg-surface-3 hover:text-ink/70">
           <ArrowLeft size={12} />
           Retour au tableau
         </Link>
@@ -187,11 +187,11 @@ export function Guide() {
       {/* Header */}
       <div className="min-w-0">
         <Link to="/"
-          className="inline-flex items-center gap-1.5 text-xs text-white/30 hover:text-white/60 transition mb-3">
+          className="inline-flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink/60 transition mb-3">
           <ArrowLeft size={12} /> Tableau de bord
         </Link>
-        <p className="text-[11px] uppercase tracking-widest text-white/30">Documentation</p>
-        <h1 className="text-xl font-bold text-white leading-tight">Comment ça marche</h1>
+        <p className="text-[11px] uppercase tracking-widest text-ink/50">Documentation</p>
+        <h1 className="text-xl font-bold text-ink leading-tight">Comment ça marche</h1>
       </div>
 
       {/* ── Hero méthode ──────────────────────────────────────────────────────── */}
@@ -213,8 +213,8 @@ export function Guide() {
               <div className="flex items-start gap-4">
                 <img src="/piece.png" alt="" aria-hidden className="h-14 w-14 shrink-0 object-contain drop-shadow-[0_0_16px_rgba(87,125,255,0.6)]" />
                 <div>
-                  <h2 className="text-base font-bold text-white mb-1.5">La méthode des enveloppes</h2>
-                  <p className="text-sm text-white/50 leading-relaxed">
+                  <h2 className="text-base font-bold text-ink mb-1.5">La méthode des enveloppes</h2>
+                  <p className="text-sm text-ink/70 leading-relaxed">
                     Avant de dépenser, tu alloues chaque franc à une enveloppe. Chaque enveloppe a un rôle précis.
                     Tu ne dépenses que ce qui est alloué — jamais au-delà.
                   </p>
@@ -222,7 +222,7 @@ export function Guide() {
               </div>
 
               {/* Stats */}
-              <div className="mt-4 grid grid-cols-3 gap-2 border-t border-white/8 pt-4">
+              <div className="mt-4 grid grid-cols-3 gap-2 border-t border-ink/8 pt-4">
                 {[
                   { value: '4',      label: 'Enveloppes' },
                   { value: '∞',      label: 'Objectifs' },
@@ -230,7 +230,7 @@ export function Guide() {
                 ].map(({ value, label }) => (
                   <div key={label} className="text-center">
                     <p className="text-xl font-bold font-mono text-brand-300">{value}</p>
-                    <p className="text-[10px] text-white/30 mt-0.5">{label}</p>
+                    <p className="text-[10px] text-ink/50 mt-0.5">{label}</p>
                   </div>
                 ))}
               </div>
@@ -241,7 +241,7 @@ export function Guide() {
 
       {/* ── Processus mensuel ─────────────────────────────────────────────────── */}
       <section id="process" className="flex flex-col gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50">
           Processus mensuel
         </p>
 
@@ -255,13 +255,13 @@ export function Guide() {
                   <span className={`text-[10px] font-bold font-mono ${step.num}`}>{step.n}</span>
                 </div>
                 <div>
-                  <p className={`text-sm font-semibold text-white mb-1`}>{step.title}</p>
-                  <p className="text-xs text-white/45 leading-relaxed">{step.body}</p>
+                  <p className={`text-sm font-semibold text-ink mb-1`}>{step.title}</p>
+                  <p className="text-xs text-ink/65 leading-relaxed">{step.body}</p>
                 </div>
               </div>
               {step.connector && (
                 <div className="flex justify-center py-1">
-                  <ArrowDown size={14} className="text-white/15" />
+                  <ArrowDown size={14} className="text-ink/30" />
                 </div>
               )}
             </div>
@@ -271,7 +271,7 @@ export function Guide() {
 
       {/* ── Toutes les fonctionnalités ────────────────────────────────────────── */}
       <section id="features" className="flex flex-col gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50">
           Toutes les fonctionnalités
         </p>
 
@@ -286,12 +286,12 @@ export function Guide() {
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1.5">
-                      <p className="text-sm font-semibold text-white">{f.title}</p>
+                      <p className="text-sm font-semibold text-ink">{f.title}</p>
                       <span className={`text-[9px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded-md ${f.tagColor}`}>
                         {f.tag}
                       </span>
                     </div>
-                    <p className="text-xs text-white/45 leading-relaxed">{f.desc}</p>
+                    <p className="text-xs text-ink/65 leading-relaxed">{f.desc}</p>
                   </div>
                 </div>
               </Card>
@@ -301,7 +301,7 @@ export function Guide() {
       </section>
 
       {/* ── CTA final ─────────────────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-2xl border border-white/8 bg-surface-2 px-5 py-6 text-center">
+      <div className="relative overflow-hidden rounded-2xl border border-ink/8 bg-surface-2 px-5 py-6 text-center">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <img src="/piece.png" alt="" aria-hidden
             className="absolute -left-4 top-0 w-16 opacity-15 rotate-[20deg]"
@@ -310,7 +310,7 @@ export function Guide() {
             className="absolute -right-3 bottom-0 w-14 opacity-15 -rotate-[15deg]"
             style={{ filter: 'blur(4px)' }} />
         </div>
-        <p className="relative text-sm text-white/50 mb-4">
+        <p className="relative text-sm text-ink/70 mb-4">
           Tu as tout compris — place à la pratique 🎯
         </p>
         <Link to="/"

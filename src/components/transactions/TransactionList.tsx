@@ -19,7 +19,7 @@ export function TransactionList({
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 py-12 text-white/30">
+      <div className="flex flex-col items-center gap-3 py-12 text-ink/50">
         <ArrowLeftRight size={32} className="opacity-30" />
         <p className="text-sm">Aucune transaction</p>
       </div>
@@ -27,7 +27,7 @@ export function TransactionList({
   }
 
   return (
-    <div className="flex flex-col divide-y divide-white/[0.04]">
+    <div className="flex flex-col divide-y divide-ink/[0.04]">
       {items.map((tx) => (
         <TransactionRow key={tx.id} tx={tx} envelopes={envelopes} goalWallets={goalWallets} />
       ))}

@@ -22,8 +22,8 @@ export function Button({
         'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400/60 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed',
         {
           'bg-gradient-brand text-white shadow-glow-brand hover:opacity-90': variant === 'primary',
-          'bg-surface-3 text-white border border-white/10 hover:bg-surface-4': variant === 'secondary',
-          'text-white/60 hover:text-white hover:bg-white/5': variant === 'ghost',
+          'bg-surface-3 text-ink border border-ink/10 hover:bg-surface-4': variant === 'secondary',
+          'text-ink/60 hover:text-ink hover:bg-ink/5': variant === 'ghost',
           'bg-accent-rose/10 text-accent-rose border border-accent-rose/20 hover:bg-accent-rose/20': variant === 'danger',
         },
         {

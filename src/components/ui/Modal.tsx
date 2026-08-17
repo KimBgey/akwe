@@ -28,7 +28,7 @@ export function Modal({ open, onClose, title, children, size = 'md' }: ModalProp
       />
       <div
         className={clsx(
-          'relative z-10 w-full rounded-3xl border border-white/10 bg-surface-1 shadow-[0_24px_80px_rgba(0,0,0,0.6)] animate-fade-up flex flex-col max-h-[90vh]',
+          'relative z-10 w-full rounded-3xl border border-ink/10 bg-surface-1 shadow-[0_24px_80px_rgb(var(--shadow-ambient)/calc(0.6*var(--shadow-scale)))] animate-fade-up flex flex-col max-h-[90vh]',
           {
             'max-w-sm': size === 'sm',
             'max-w-md': size === 'md',
@@ -36,11 +36,11 @@ export function Modal({ open, onClose, title, children, size = 'md' }: ModalProp
           }
         )}
       >
-        <div className="flex items-center justify-between border-b border-white/5 px-6 py-4 shrink-0">
-          <h2 className="text-base font-semibold text-white">{title}</h2>
+        <div className="flex items-center justify-between border-b border-ink/5 px-6 py-4 shrink-0">
+          <h2 className="text-base font-semibold text-ink">{title}</h2>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-white/40 transition hover:bg-white/5 hover:text-white"
+            className="rounded-lg p-1.5 text-ink/60 transition hover:bg-ink/5 hover:text-ink"
           >
             <X size={16} />
           </button>

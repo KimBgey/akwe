@@ -68,6 +68,7 @@ type Action =
   | { type: 'TRANSFER_TO_GOAL'; payload: { goalId: string; amount: number; label: string; sourceEnvelopeId: string } }
   | { type: 'ADD_GOAL'; payload: Omit<GoalWallet, 'id' | 'createdAt' | 'spentAmount' | 'allocatedAmount' | 'currentAmount'> }
   | { type: 'UPDATE_GOAL'; payload: Partial<GoalWallet> & { id: string } }
+  | { type: 'DELETE_GOAL'; payload: { id: string } }
   | { type: 'UPDATE_DISTRIBUTION_RULE'; payload: DistributionRule }
   | { type: 'REMOVE_DISTRIBUTION_RULE'; payload: { envelopeId: string } }
   | { type: 'UPDATE_ENVELOPE_NAME'; payload: { id: string; name: string } }
@@ -221,6 +222,12 @@ function reducer(state: BudgetState, action: Action): BudgetState {
         goalWallets: state.goalWallets.map((g) =>
           g.id === action.payload.id ? { ...g, ...action.payload } : g
         ),
+      }
+
+    case 'DELETE_GOAL':
+      return {
+        ...state,
+        goalWallets: state.goalWallets.filter((g) => g.id !== action.payload.id),
       }
 
     case 'UPDATE_DISTRIBUTION_RULE': {
@@ -589,6 +596,10 @@ export function useBudget(uid: string) {
     dispatch({ type: 'UPDATE_GOAL', payload: update })
   }, [])
 
+  const deleteGoal = useCallback((id: string) => {
+    dispatch({ type: 'DELETE_GOAL', payload: { id } })
+  }, [])
+
   const updateDistributionRule = useCallback((rule: DistributionRule) => {
     dispatch({ type: 'UPDATE_DISTRIBUTION_RULE', payload: rule })
   }, [])
@@ -632,6 +643,7 @@ export function useBudget(uid: string) {
     transferToGoal,
     addGoal,
     updateGoal,
+    deleteGoal,
     updateDistributionRule,
     removeDistributionRule,
     handleReliquat,

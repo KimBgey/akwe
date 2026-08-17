@@ -10,7 +10,7 @@ export function markWelcomeSeen() { localStorage.setItem(LS_KEY, 'true') }
 /* ── Slide 1 hero — pièces éparpillées ─────────────────────────────────── */
 function HeroCoins() {
   return (
-    <div className="relative h-48 overflow-hidden bg-surface-0 select-none">
+    <div className="relative h-48 overflow-hidden bg-[#0A0B0F] select-none">
       {/* Ambient glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-900/70 via-surface-0/40 to-accent-violet/20 pointer-events-none" />
 
@@ -53,12 +53,12 @@ function HeroEnvelopes() {
     { Icon: Coins,       color: 'text-accent-cyan',   bg: 'bg-accent-cyan/15',   label: 'Bonus',    amount: '12 000 F' },
   ]
   return (
-    <div className="relative h-48 overflow-hidden bg-surface-0">
+    <div className="relative h-48 overflow-hidden bg-[#0A0B0F]">
       <div className="absolute inset-0 bg-gradient-to-br from-accent-emerald/15 to-accent-violet/15 pointer-events-none" />
       <div className="absolute inset-3 grid grid-cols-2 gap-2">
         {cards.map(({ Icon, color, bg, label, amount }) => (
           <div key={label}
-            className="rounded-xl border border-white/8 bg-surface-1/80 backdrop-blur-sm px-3 py-2.5 flex items-center gap-2.5">
+            className="rounded-xl border border-white/8 bg-[#12141A]/80 backdrop-blur-sm px-3 py-2.5 flex items-center gap-2.5">
             <div className={clsx('h-7 w-7 shrink-0 rounded-lg flex items-center justify-center', bg)}>
               <Icon size={13} className={color} />
             </div>
@@ -81,7 +81,7 @@ function HeroEnvelopes() {
 /* ── Slide 3 hero — objectif avec progress ─────────────────────────────── */
 function HeroGoal() {
   return (
-    <div className="relative h-48 overflow-hidden bg-surface-0">
+    <div className="relative h-48 overflow-hidden bg-[#0A0B0F]">
       <div className="absolute inset-0 bg-gradient-to-br from-accent-amber/20 to-accent-rose/15 pointer-events-none" />
 
       {/* Pièce déco */}
@@ -93,7 +93,7 @@ function HeroGoal() {
         style={{ filter: 'blur(3px)' }} />
 
       {/* Mini goal card */}
-      <div className="absolute inset-4 rounded-2xl border border-white/10 bg-surface-1/80 backdrop-blur-sm p-4 flex flex-col justify-between">
+      <div className="absolute inset-4 rounded-2xl border border-white/10 bg-[#12141A]/80 backdrop-blur-sm p-4 flex flex-col justify-between">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 shrink-0 rounded-xl bg-accent-amber/20 border border-accent-amber/20 flex items-center justify-center text-xl">
             ✈️
@@ -168,7 +168,7 @@ export function WelcomeModal() {
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 animate-fade-in">
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={dismiss} />
 
-      <div className="relative z-10 w-full max-w-sm rounded-3xl border border-white/10 bg-surface-1 shadow-[0_32px_80px_rgba(0,0,0,0.8)] overflow-hidden animate-fade-up">
+      <div className="relative z-10 w-full max-w-sm rounded-3xl border border-ink/10 bg-surface-1 shadow-[0_32px_80px_rgb(var(--shadow-ambient)/calc(0.8*var(--shadow-scale)))] overflow-hidden animate-fade-up">
 
         {/* Bouton fermer */}
         <button onClick={dismiss}
@@ -181,21 +181,21 @@ export function WelcomeModal() {
 
         {/* Texte */}
         <div className="px-5 pt-4 pb-2">
-          <p className="text-[10px] uppercase tracking-widest font-semibold text-white/35 mb-1">
+          <p className="text-[10px] uppercase tracking-widest font-semibold text-ink/55 mb-1">
             {current.tag}
           </p>
-          <h2 className="text-lg font-bold text-white leading-snug mb-3">{current.title}</h2>
+          <h2 className="text-lg font-bold text-ink leading-snug mb-3">{current.title}</h2>
 
           {current.body ? (
-            <p className="text-sm text-white/50 leading-relaxed">{current.body}</p>
+            <p className="text-sm text-ink/70 leading-relaxed">{current.body}</p>
           ) : (
             <div className="grid grid-cols-2 gap-1.5">
               {current.features!.map((f) => (
-                <div key={f.label} className="flex items-start gap-2 rounded-xl bg-surface-3 px-2.5 py-2">
+                <div key={f.label} className="flex items-start gap-2 rounded-xl border border-ink/5 bg-ink/[0.03] px-2.5 py-2">
                   <span className="text-sm shrink-0">{f.emoji}</span>
                   <div className="min-w-0">
-                    <p className="text-xs font-semibold text-white leading-tight">{f.label}</p>
-                    <p className="text-[10px] text-white/35 leading-tight mt-0.5">{f.desc}</p>
+                    <p className="text-xs font-semibold text-ink leading-tight">{f.label}</p>
+                    <p className="text-[10px] text-ink/55 leading-tight mt-0.5">{f.desc}</p>
                   </div>
                 </div>
               ))}
@@ -209,7 +209,7 @@ export function WelcomeModal() {
             {SLIDES.map((_, i) => (
               <button key={i} onClick={() => setSlide(i)}
                 className={clsx('rounded-full transition-all duration-300',
-                  i === slide ? 'w-5 h-1.5 bg-brand-400' : 'w-1.5 h-1.5 bg-white/20'
+                  i === slide ? 'w-5 h-1.5 bg-brand-400' : 'w-1.5 h-1.5 bg-ink/20'
                 )} />
             ))}
           </div>
@@ -218,18 +218,18 @@ export function WelcomeModal() {
             {!isLast ? (
               <>
                 <button onClick={dismiss}
-                  className="text-xs text-white/25 hover:text-white/50 transition px-2 py-1.5">
+                  className="text-xs text-ink/45 hover:text-ink/70 transition px-2 py-1.5">
                   Passer
                 </button>
                 <button onClick={() => setSlide((s) => s + 1)}
-                  className="flex items-center gap-1.5 rounded-xl bg-brand-500/15 border border-brand-500/20 px-4 py-2 text-sm font-semibold text-brand-300 transition hover:bg-brand-500/25">
+                  className="flex items-center gap-1.5 rounded-xl bg-gradient-brand px-4 py-2 text-sm font-semibold text-white shadow-glow-brand transition hover:opacity-90">
                   Suivant <ChevronRight size={14} />
                 </button>
               </>
             ) : (
               <>
                 <button onClick={dismiss}
-                  className="text-xs text-white/25 hover:text-white/50 transition px-2 py-1.5">
+                  className="text-xs text-ink/45 hover:text-ink/70 transition px-2 py-1.5">
                   Commencer
                 </button>
                 <button onClick={goGuide}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useBudget } from '@/hooks/useBudget'
 import { useRightPanel } from '@/contexts/RightPanelContext'
+import { useTheme } from '@/contexts/ThemeContext'
 import { TransactionHistory } from '@/components/transactions/TransactionHistory'
 import { Card } from '@/components/ui/Card'
 import { ProgressBar } from '@/components/ui/ProgressBar'
@@ -37,7 +38,7 @@ function StatPanel({ transactions }: { transactions: Transaction[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">
+      <p className="text-[11px] font-semibold uppercase tracking-widest text-ink/50">
         Statistiques
       </p>
 
@@ -50,7 +51,7 @@ function StatPanel({ transactions }: { transactions: Transaction[] }) {
             { icon: Wallet,        label: 'Solde net', value: balance,       color: balance >= 0 ? 'text-brand-300' : 'text-accent-rose' },
           ].map(({ icon: Icon, label, value, color }) => (
             <div key={label} className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-white/40">
+              <div className="flex items-center gap-2 text-ink/60">
                 <Icon size={13} />
                 <span className="text-xs">{label}</span>
               </div>
@@ -64,7 +65,7 @@ function StatPanel({ transactions }: { transactions: Transaction[] }) {
         {/* Top categories */}
         {topCategories.length > 0 && (
           <div className="flex flex-col gap-2 border-t border-white/5 pt-3">
-            <p className="text-[10px] uppercase tracking-widest text-white/20 mb-1">
+            <p className="text-[10px] uppercase tracking-widest text-ink/40 mb-1">
               Top catégories
             </p>
             {topCategories.map(([key, amount], i) => {
@@ -75,11 +76,11 @@ function StatPanel({ transactions }: { transactions: Transaction[] }) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <span className="text-sm">{cat?.emoji ?? '💡'}</span>
-                      <span className="text-xs text-white/60 truncate max-w-[110px]">
+                      <span className="text-xs text-ink/60 truncate max-w-[110px]">
                         {cat?.label ?? key}
                       </span>
                     </div>
-                    <span className="text-[10px] font-mono text-white/40 shrink-0">
+                    <span className="text-[10px] font-mono text-ink/60 shrink-0">
                       {formatCurrency(amount)}
                     </span>
                   </div>
@@ -95,7 +96,7 @@ function StatPanel({ transactions }: { transactions: Transaction[] }) {
         )}
 
         {transactions.length === 0 && (
-          <p className="text-xs text-white/30 text-center py-2">Aucune transaction</p>
+          <p className="text-xs text-ink/50 text-center py-2">Aucune transaction</p>
         )}
       </Card>
     </div>
@@ -104,8 +105,15 @@ function StatPanel({ transactions }: { transactions: Transaction[] }) {
 
 export function History({ uid }: { uid: string }) {
   const { state } = useBudget(uid)
+  const { theme } = useTheme()
   const setRightPanel = useRightPanel()
   const [categoryFilter, setCategoryFilter] = useState<Category | 'all'>('all')
+
+  const chartTickColor   = theme === 'dark' ? 'rgba(255,255,255,0.3)'  : 'rgba(15,17,23,0.4)'
+  const chartCursorFill  = theme === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(15,17,23,0.04)'
+  const tooltipBg        = theme === 'dark' ? '#1A1D26' : '#FFFFFF'
+  const tooltipBorder    = theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,17,23,0.1)'
+  const tooltipTextColor = theme === 'dark' ? '#FFFFFF' : '#0F1117'
 
   const expensesByCategory = state.transactions
     .filter((t) => t.type === 'expense')
@@ -137,19 +145,19 @@ export function History({ uid }: { uid: string }) {
   return (
     <div className="flex flex-col gap-8">
       <div className="min-w-0">
-        <p className="text-[11px] uppercase tracking-widest text-white/30">Historique</p>
-        <h1 className="text-xl font-bold text-white leading-tight truncate">Transactions</h1>
+        <p className="text-[11px] uppercase tracking-widest text-ink/50">Historique</p>
+        <h1 className="text-xl font-bold text-ink leading-tight truncate">Transactions</h1>
       </div>
 
       {/* Stats row */}
       <div className="grid grid-cols-2 gap-4">
         <Card>
-          <p className="text-xs uppercase tracking-widest text-white/30 mb-1">Total dépensé</p>
+          <p className="text-xs uppercase tracking-widest text-ink/50 mb-1">Total dépensé</p>
           <p className="text-xl font-bold font-mono text-accent-rose">{formatCurrency(totalExpenses)}</p>
         </Card>
         <Card>
-          <p className="text-xs uppercase tracking-widest text-white/30 mb-1">Transactions</p>
-          <p className="text-xl font-bold text-white">{state.transactions.length}</p>
+          <p className="text-xs uppercase tracking-widest text-ink/50 mb-1">Transactions</p>
+          <p className="text-xl font-bold text-ink">{state.transactions.length}</p>
         </Card>
       </div>
 
@@ -157,7 +165,7 @@ export function History({ uid }: { uid: string }) {
       {chartData.length > 0 && (
         <Card>
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-white/30">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-ink/50">
               Dépenses par catégorie
             </h2>
             {categoryFilter !== 'all' && (
@@ -174,18 +182,18 @@ export function History({ uid }: { uid: string }) {
             <BarChart data={chartData} barCategoryGap="30%">
               <XAxis
                 dataKey="name"
-                tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }}
+                tick={{ fill: chartTickColor, fontSize: 11 }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis hide />
               <Tooltip
-                cursor={{ fill: 'rgba(255,255,255,0.03)' }}
+                cursor={{ fill: chartCursorFill }}
                 contentStyle={{
-                  background: '#1A1D26',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: tooltipBg,
+                  border: `1px solid ${tooltipBorder}`,
                   borderRadius: '12px',
-                  color: 'white',
+                  color: tooltipTextColor,
                   fontSize: 12,
                 }}
                 formatter={(value: number) => [formatCurrency(value), 'Dépenses']}
@@ -203,7 +211,7 @@ export function History({ uid }: { uid: string }) {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
-          <p className="mt-3 text-[11px] text-white/25">
+          <p className="mt-3 text-[11px] text-ink/45">
             Clique une barre pour filtrer la liste ci-dessous
           </p>
         </Card>
@@ -211,7 +219,7 @@ export function History({ uid }: { uid: string }) {
 
       {/* Full transaction list */}
       <Card>
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-white/30 mb-4">
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-ink/50 mb-4">
           Toutes les transactions
         </h2>
         <TransactionHistory

@@ -67,7 +67,7 @@ export function DistributionSettings({
         <div>
           <div className="flex items-center gap-2 mb-3">
             <CalendarDays size={14} className="text-brand-400" />
-            <p className="text-xs font-semibold uppercase tracking-widest text-white/40">
+            <p className="text-xs font-semibold uppercase tracking-widest text-ink/60">
               Jour de virement salaire
             </p>
           </div>
@@ -80,22 +80,22 @@ export function DistributionSettings({
                   'rounded-xl border py-2.5 text-sm font-bold transition',
                   payDay === d
                     ? 'border-brand-500/40 bg-brand-500/15 text-brand-300'
-                    : 'border-white/8 bg-surface-3 text-white/40 hover:border-white/20 hover:text-white/70'
+                    : 'border-ink/8 bg-surface-3 text-ink/60 hover:border-ink/20 hover:text-ink/70'
                 )}
               >
                 {d}
               </button>
             ))}
           </div>
-          <p className="mt-2 text-[11px] text-white/30">
+          <p className="mt-2 text-[11px] text-ink/50">
             Le bouton "Revenu mensuel" se débloque le{' '}
-            <span className="text-white/50 font-semibold">{payDay}</span> de chaque mois.
+            <span className="text-ink/70 font-semibold">{payDay}</span> de chaque mois.
           </p>
         </div>
 
         {/* Règles de distribution */}
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-3">
+          <p className="text-xs font-semibold uppercase tracking-widest text-ink/60 mb-3">
             Répartition automatique
           </p>
           <div className="flex flex-col gap-2">
@@ -106,8 +106,8 @@ export function DistributionSettings({
                 <Card key={env.id} className="!p-3.5">
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-sm font-semibold text-white">{env.name}</p>
-                      <p className="text-xs text-white/30 capitalize">{env.type}</p>
+                      <p className="text-sm font-semibold text-ink">{env.name}</p>
+                      <p className="text-xs text-ink/50 capitalize">{env.type}</p>
                     </div>
                     {isEditing ? (
                       <div className="flex items-center gap-2">
@@ -129,12 +129,12 @@ export function DistributionSettings({
                       </div>
                     ) : (
                       <div className="flex items-center gap-3">
-                        <span className="text-sm font-bold font-mono text-white">
+                        <span className="text-sm font-bold font-mono text-ink">
                           {rule ? `${rule.amount.toLocaleString('fr-FR')} F` : '— F'}
                         </span>
                         <button
                           onClick={() => startEdit(env.id)}
-                          className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-3 text-white/40 hover:text-white transition"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-3 text-ink/60 hover:text-ink transition"
                         >
                           <Pencil size={13} />
                         </button>
@@ -145,14 +145,14 @@ export function DistributionSettings({
               )
             })}
           </div>
-          <p className="mt-2 text-[11px] text-white/30">
+          <p className="mt-2 text-[11px] text-ink/50">
             Le reste va automatiquement dans le solde courant.
           </p>
         </div>
 
         {/* Zone danger — Réinitialisation */}
-        <div className="border-t border-white/5 pt-4">
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/20 mb-3">
+        <div className="border-t border-ink/5 pt-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-3">
             Zone de danger
           </p>
 
@@ -168,7 +168,7 @@ export function DistributionSettings({
                 <p className="text-sm font-semibold text-accent-rose leading-tight">
                   Réinitialiser toutes les données
                 </p>
-                <p className="text-[10px] text-white/30 mt-0.5">
+                <p className="text-[10px] text-ink/50 mt-0.5">
                   Enveloppes, transactions, objectifs — tout sera effacé
                 </p>
               </div>
@@ -178,8 +178,8 @@ export function DistributionSettings({
               <div className="flex items-start gap-3">
                 <AlertTriangle size={16} className="text-accent-rose shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-semibold text-white">Confirmer la réinitialisation</p>
-                  <p className="text-xs text-white/40 mt-0.5">
+                  <p className="text-sm font-semibold text-ink">Confirmer la réinitialisation</p>
+                  <p className="text-xs text-ink/60 mt-0.5">
                     Cette action est irréversible. Toutes tes enveloppes, transactions et objectifs seront définitivement supprimés.
                   </p>
                 </div>

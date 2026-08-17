@@ -69,25 +69,25 @@ export function TransactionForm({
         {/* Enveloppe + Montant côte à côte */}
         <div className="grid grid-cols-2 gap-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium uppercase tracking-widest text-white/40">
+            <label className="text-xs font-medium uppercase tracking-widest text-ink/60">
               Enveloppe
             </label>
             <div className="relative">
               <select
                 value={envelopeId}
                 onChange={(e) => setEnvelopeId(e.target.value)}
-                className="w-full appearance-none rounded-xl border border-white/10 bg-surface-3 px-3 py-3 text-sm text-white outline-none focus:border-brand-500/60 focus:ring-1 focus:ring-brand-500/30"
+                className="w-full appearance-none rounded-xl border border-ink/10 bg-surface-3 px-3 py-3 text-sm text-ink outline-none focus:border-brand-500/60 focus:ring-1 focus:ring-brand-500/30"
               >
                 <option value="" disabled>Choisir…</option>
                 {spendable.map((e) => (
                   <option key={e.id} value={e.id}>{e.name}</option>
                 ))}
               </select>
-              <ChevronDown size={13} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/30" />
+              <ChevronDown size={13} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-ink/50" />
             </div>
             {balance !== null && (
-              <p className="text-[11px] text-white/30">
-                Dispo: <span className="text-white/60 font-semibold">{formatCurrency(balance)}</span>
+              <p className="text-[11px] text-ink/50">
+                Dispo: <span className="text-ink/60 font-semibold">{formatCurrency(balance)}</span>
               </p>
             )}
           </div>
@@ -104,7 +104,7 @@ export function TransactionForm({
 
         {/* Catégorie — chips horizontales scrollables */}
         <div className="flex flex-col gap-2">
-          <label className="text-xs font-medium uppercase tracking-widest text-white/40">
+          <label className="text-xs font-medium uppercase tracking-widest text-ink/60">
             Catégorie
           </label>
           <div className="flex gap-2 overflow-x-auto pb-1 -mx-6 px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -118,7 +118,7 @@ export function TransactionForm({
                     'shrink-0 flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition',
                     category === key
                       ? 'border-brand-500/40 bg-brand-500/10 text-brand-300'
-                      : 'border-white/10 bg-surface-3 text-white/40 hover:text-white/70'
+                      : 'border-ink/10 bg-surface-3 text-ink/60 hover:text-ink/70'
                   )}
                 >
                   <span>{emoji}</span>

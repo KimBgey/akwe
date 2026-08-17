@@ -72,7 +72,7 @@ export function EnvelopeCard({ envelope, onClick }: EnvelopeCardProps) {
               <Icon size={18} className={cfg.iconColor} />
             </div>
             <div>
-              <p className="text-sm font-semibold text-white">{envelope.name}</p>
+              <p className="text-sm font-semibold text-ink">{envelope.name}</p>
               <Badge
                 variant={
                   isGoal
@@ -95,20 +95,20 @@ export function EnvelopeCard({ envelope, onClick }: EnvelopeCardProps) {
           <div className="flex flex-col gap-3">
             <div className="flex items-end justify-between">
               <div>
-                <p className="text-xs text-white/40 mb-0.5">Épargné</p>
-                <p className="text-xl font-bold text-white font-mono">
+                <p className="text-xs text-ink/60 mb-0.5">Épargné</p>
+                <p className="text-xl font-bold text-ink font-mono">
                   {formatCurrency(goal!.currentAmount)}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-xs text-white/40 mb-0.5">Objectif</p>
-                <p className="text-sm font-semibold text-white/60 font-mono">
+                <p className="text-xs text-ink/60 mb-0.5">Objectif</p>
+                <p className="text-sm font-semibold text-ink/60 font-mono">
                   {formatCurrency(goal!.targetAmount)}
                 </p>
               </div>
             </div>
             <ProgressBar value={displayProgress} color={cfg.progressColor} />
-            <div className="flex items-center justify-between text-xs text-white/40">
+            <div className="flex items-center justify-between text-xs text-ink/60">
               <span>{Math.round(displayProgress * 100)}% atteint</span>
               {getMonthsLeft(goal!) !== null && (
                 <span>{getMonthsLeft(goal!)} mois restants</span>
@@ -118,14 +118,14 @@ export function EnvelopeCard({ envelope, onClick }: EnvelopeCardProps) {
         ) : (
           <div className="flex flex-col gap-3">
             <div>
-              <p className="text-xs text-white/40 mb-0.5">Solde</p>
-              <p className={clsx('text-xl font-bold font-mono whitespace-nowrap', isOverdrawn ? 'text-accent-rose' : 'text-white')}>
+              <p className="text-xs text-ink/60 mb-0.5">Solde</p>
+              <p className={clsx('text-xl font-bold font-mono whitespace-nowrap', isOverdrawn ? 'text-accent-rose' : 'text-ink')}>
                 {formatCurrency(balance)}
               </p>
               {envelope.type !== 'locked' && (
-                <p className="text-[11px] text-white/35 mt-0.5 whitespace-nowrap">
+                <p className="text-[11px] text-ink/55 mt-0.5 whitespace-nowrap">
                   Dépensé&nbsp;
-                  <span className="font-semibold text-white/50">{formatCurrency(envelope.spentAmount)}</span>
+                  <span className="font-semibold text-ink/70">{formatCurrency(envelope.spentAmount)}</span>
                 </p>
               )}
             </div>
@@ -133,7 +133,7 @@ export function EnvelopeCard({ envelope, onClick }: EnvelopeCardProps) {
             {envelope.type !== 'locked' && envelope.allocatedAmount > 0 && (
               <>
                 <ProgressBar value={displayProgress} color={isOverdrawn ? 'rose' : cfg.progressColor} />
-                <div className="flex justify-between text-xs text-white/40">
+                <div className="flex justify-between text-xs text-ink/60">
                   <span>{Math.round(displayProgress * 100)}% utilisé</span>
                   <span>Alloué : {formatCurrency(envelope.allocatedAmount)}</span>
                 </div>
@@ -143,14 +143,14 @@ export function EnvelopeCard({ envelope, onClick }: EnvelopeCardProps) {
             {envelope.type === 'locked' && (
               <div className="flex items-center gap-2 rounded-xl bg-accent-violet/5 border border-accent-violet/15 px-3 py-2">
                 <Lock size={12} className="text-accent-violet/70" />
-                <span className="text-xs text-white/40">Retrait avec confirmation uniquement</span>
+                <span className="text-xs text-ink/60">Retrait avec confirmation uniquement</span>
               </div>
             )}
 
             {envelope.type === 'bonus' && envelope.allocatedAmount === 0 && (
               <div className="flex items-center gap-2 rounded-xl bg-accent-cyan/5 border border-accent-cyan/10 px-3 py-2">
                 <Coins size={12} className="text-accent-cyan/60" />
-                <span className="text-xs text-white/40">Revenus imprévus et reliquats</span>
+                <span className="text-xs text-ink/60">Revenus imprévus et reliquats</span>
               </div>
             )}
           </div>
