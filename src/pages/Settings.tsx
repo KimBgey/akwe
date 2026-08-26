@@ -11,7 +11,7 @@ import { useRightPanel } from '@/contexts/RightPanelContext'
 import {
   CalendarDays, Pencil, Check, X, Trash2, AlertTriangle,
   LogOut, CheckCircle2, AlertCircle, Loader2, Database,
-  ReceiptText, Target, Layers, BookOpen, ChevronDown,
+  ReceiptText, Target, Layers, BookOpen, ChevronDown, Lock,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -38,17 +38,18 @@ const FAQ = [
   },
   {
     q: 'L\'épargne bloquée est vraiment bloquée ?',
-    a: 'Oui — chaque retrait demande une confirmation explicite. C\'est voulu : cette friction t\'évite de puiser dans ton épargne impulsivement. Utile pour un fond d\'urgence ou une épargne long terme.',
+    a: 'Oui — aucun retrait normal n\'est possible avant la date de déblocage, fixée une fois pour toutes quand tu choisis la durée (réglable dans Réglages). Tes apports suivants ne la déplacent pas. En cas de vraie urgence, un retrait exceptionnel reste possible avec une confirmation renforcée, pour que ton solde reste toujours honnête.',
   },
 ]
 
 const PAY_DAY_OPTIONS = [1, 5, 10, 15, 20, 25, 28, 30]
+const LOCK_DURATION_OPTIONS = [1, 3, 6, 9, 12, 18, 24, 36]
 
 export function Settings({ uid }: { uid: string }) {
   const { user, signOut } = useAuth()
   const {
     state, syncStatus,
-    updateDistributionRule, setPayDay, resetAll,
+    updateDistributionRule, setPayDay, setLockDuration, resetAll,
   } = useBudget(uid)
 
   const setRightPanel = useRightPanel()
@@ -323,6 +324,34 @@ export function Settings({ uid }: { uid: string }) {
           <p className="mt-2.5 text-[11px] text-ink/50">
             Le bouton "Revenu mensuel" se débloque le{' '}
             <span className="font-semibold text-ink/70">{state.payDay}</span> de chaque mois.
+          </p>
+        </Card>
+
+        <Card className="p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Lock size={14} className="text-accent-violet" />
+            <p className="text-xs font-semibold text-ink/60">Durée de blocage de l'épargne</p>
+          </div>
+          <div className="grid grid-cols-4 gap-2">
+            {LOCK_DURATION_OPTIONS.map((m) => (
+              <button
+                key={m}
+                onClick={() => setLockDuration(m)}
+                className={clsx(
+                  'rounded-xl border py-2.5 text-sm font-bold transition',
+                  state.lockDurationMonths === m
+                    ? 'border-accent-violet/40 bg-accent-violet/15 text-accent-violet'
+                    : 'border-ink/8 bg-surface-3 text-ink/60 hover:border-ink/20 hover:text-ink/70'
+                )}
+              >
+                {m}
+              </button>
+            ))}
+          </div>
+          <p className="mt-2.5 text-[11px] text-ink/50">
+            Choisir une durée fixe la date de déblocage à{' '}
+            <span className="font-semibold text-ink/70">{state.lockDurationMonths} mois</span> à partir
+            d'aujourd'hui — tes apports suivants ne la déplacent plus.
           </p>
         </Card>
       </section>

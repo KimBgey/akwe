@@ -16,7 +16,7 @@ const FEATURES = [
     title: 'Épargne bloquée',
     tag: 'Enveloppe',
     tagColor: 'bg-accent-violet/10 text-accent-violet/70',
-    desc: "Argent sécurisé que tu ne peux pas dépenser par accident. Chaque retrait demande une confirmation explicite. Parfait pour un fond d'urgence ou une épargne long terme.",
+    desc: "Argent mis de côté pour une durée fixe que tu choisis (ex: 6 mois). La date de déblocage ne bouge plus ensuite, même si tu continues d'épargner. Un retrait exceptionnel reste possible avant l'échéance, avec confirmation renforcée.",
   },
   {
     icon: TrendingDown,

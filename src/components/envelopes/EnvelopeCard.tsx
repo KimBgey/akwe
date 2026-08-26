@@ -1,9 +1,12 @@
 import { Envelope, GoalWallet } from '@/types'
-import { getBalance, getProgress, getMonthsLeft, formatCurrency } from '@/utils/calculations'
+import {
+  getBalance, getProgress, getMonthsLeft, formatCurrency,
+  getLockMonthsRemaining, getLockUnlockDate, getLockProgress,
+} from '@/utils/calculations'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { ProgressBar } from '@/components/ui/ProgressBar'
-import { Lock, TrendingDown, Wallet, Target, AlertTriangle, Coins } from 'lucide-react'
+import { Lock, Unlock, TrendingDown, Wallet, Target, AlertTriangle, Coins } from 'lucide-react'
 import clsx from 'clsx'
 
 const TYPE_CONFIG = {
@@ -47,15 +50,21 @@ const TYPE_CONFIG = {
 interface EnvelopeCardProps {
   envelope: Envelope | GoalWallet
   onClick?: () => void
+  lockDurationMonths?: number
+  onUnlockClick?: () => void
 }
 
-export function EnvelopeCard({ envelope, onClick }: EnvelopeCardProps) {
+export function EnvelopeCard({ envelope, onClick, lockDurationMonths, onUnlockClick }: EnvelopeCardProps) {
   const cfg = TYPE_CONFIG[envelope.type]
   const Icon = cfg.icon
   const balance = getBalance(envelope)
   const isGoal = envelope.type === 'goal'
   const goal = isGoal ? (envelope as GoalWallet) : null
   const isOverdrawn = balance < 0 && envelope.type !== 'locked' && !isGoal
+
+  const monthsRemaining = lockDurationMonths != null ? getLockMonthsRemaining(envelope, lockDurationMonths) : 0
+  const unlockDate = lockDurationMonths != null ? getLockUnlockDate(envelope, lockDurationMonths) : null
+  const lockProgress = lockDurationMonths != null ? getLockProgress(envelope, lockDurationMonths) : null
 
   const displayProgress = isGoal
     ? getProgress(goal!)
@@ -141,10 +150,57 @@ export function EnvelopeCard({ envelope, onClick }: EnvelopeCardProps) {
             )}
 
             {envelope.type === 'locked' && (
-              <div className="flex items-center gap-2 rounded-xl bg-accent-violet/5 border border-accent-violet/15 px-3 py-2">
-                <Lock size={12} className="text-accent-violet/70" />
-                <span className="text-xs text-ink/60">Retrait avec confirmation uniquement</span>
-              </div>
+              envelope.lockedSince ? (
+                <div className="flex flex-col gap-2">
+                  {monthsRemaining > 0 ? (
+                    <>
+                      <div className="flex items-center gap-2 rounded-xl bg-accent-violet/5 border border-accent-violet/15 px-3 py-2">
+                        <Lock size={12} className="text-accent-violet/70 shrink-0" />
+                        <span className="text-xs text-ink/60">
+                          Débloque dans {monthsRemaining} mois
+                          {unlockDate && ` (${unlockDate.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })})`}
+                        </span>
+                      </div>
+                      {lockProgress && (
+                        <div className="flex flex-col gap-1">
+                          <ProgressBar value={lockProgress.elapsed / lockProgress.total} color="violet" size="sm" />
+                          <span className="text-[10px] text-ink/40">
+                            {lockProgress.elapsed} mois / {lockProgress.total}
+                          </span>
+                        </div>
+                      )}
+                      {onUnlockClick && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); onUnlockClick() }}
+                          className="self-start text-[11px] text-ink/35 underline underline-offset-2 transition hover:text-ink/60"
+                        >
+                          Cas exceptionnel ?
+                        </button>
+                      )}
+                    </>
+                  ) : (
+                    <div className="flex items-center justify-between gap-2 rounded-xl bg-accent-emerald/5 border border-accent-emerald/15 px-3 py-2">
+                      <div className="flex items-center gap-2">
+                        <Unlock size={12} className="text-accent-emerald/80 shrink-0" />
+                        <span className="text-xs text-ink/60">Débloquée</span>
+                      </div>
+                      {onUnlockClick && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); onUnlockClick() }}
+                          className="text-[11px] font-semibold text-accent-emerald transition hover:text-accent-emerald/80"
+                        >
+                          Retirer
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 rounded-xl bg-accent-violet/5 border border-accent-violet/15 px-3 py-2">
+                  <Lock size={12} className="text-accent-violet/70" />
+                  <span className="text-xs text-ink/60">Se bloque dès le premier apport</span>
+                </div>
+              )
             )}
 
             {envelope.type === 'bonus' && envelope.allocatedAmount === 0 && (

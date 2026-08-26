@@ -4,7 +4,7 @@ import { useBudget } from '@/hooks/useBudget'
 import { useRightPanel } from '@/contexts/RightPanelContext'
 import {
   getBalance, getFreeBalance, formatCurrency, formatMonth,
-  isIncomeAvailable, hasReliquat, nextPayDate,
+  isIncomeAvailable, hasReliquat, nextPayDate, getLockMonthsRemaining,
 } from '@/utils/calculations'
 import { Card } from '@/components/ui/Card'
 import { EnvelopeCard } from '@/components/envelopes/EnvelopeCard'
@@ -15,6 +15,7 @@ import { ReliquatModal } from '@/components/dashboard/ReliquatModal'
 import { TransferModal } from '@/components/goals/TransferModal'
 import { UserMenu } from '@/components/layout/UserMenu'
 import { UnexpectedIncomeModal } from '@/components/dashboard/UnexpectedIncomeModal'
+import { UnlockSavingsModal } from '@/components/dashboard/UnlockSavingsModal'
 import { WelcomeModal } from '@/components/dashboard/WelcomeModal'
 import {
   ArrowDownLeft, ArrowRightLeft, TrendingUp,
@@ -27,7 +28,7 @@ export function Dashboard({ uid }: { uid: string }) {
   const {
     state, syncStatus,
     addIncome, addExpense, transferToGoal,
-    handleReliquat, addUnexpectedIncome,
+    handleReliquat, addUnexpectedIncome, unlockLocked,
   } = useBudget(uid)
 
   const setRightPanel = useRightPanel()
@@ -37,11 +38,13 @@ export function Dashboard({ uid }: { uid: string }) {
   const [showExpense, setShowExpense]       = useState(false)
   const [showTransfer, setShowTransfer]     = useState(false)
   const [showReliquat, setShowReliquat]     = useState(false)
+  const [showUnlock, setShowUnlock]         = useState(false)
 
+  const lockedEnvelope = state.envelopes.find((e) => e.type === 'locked') ?? state.envelopes[0]
   const freeBalance   = getFreeBalance(state)
   const totalAssets   = state.envelopes.reduce((s, e) => s + getBalance(e), 0)
                       + state.goalWallets.reduce((s, g) => s + g.currentAmount, 0)
-  const lockedBalance = getBalance(state.envelopes.find((e) => e.type === 'locked') ?? state.envelopes[0])
+  const lockedBalance = getBalance(lockedEnvelope)
   const totalGoals    = state.goalWallets.reduce((s, g) => s + g.currentAmount, 0)
 
   const canEnterIncome     = isIncomeAvailable(state)
@@ -238,7 +241,12 @@ export function Dashboard({ uid }: { uid: string }) {
         </p>
         <div className="grid grid-cols-2 gap-3">
           {state.envelopes.map((env) => (
-            <EnvelopeCard key={env.id} envelope={env} />
+            <EnvelopeCard
+              key={env.id}
+              envelope={env}
+              lockDurationMonths={env.type === 'locked' ? state.lockDurationMonths : undefined}
+              onUnlockClick={env.type === 'locked' ? () => setShowUnlock(true) : undefined}
+            />
           ))}
         </div>
       </div>
@@ -299,6 +307,13 @@ export function Dashboard({ uid }: { uid: string }) {
         month={formatMonth(state.lastIncomeMonth || state.currentMonth)}
         goals={state.goalWallets}
         onAction={handleReliquat}
+      />
+      <UnlockSavingsModal
+        open={showUnlock}
+        onClose={() => setShowUnlock(false)}
+        balance={lockedBalance}
+        monthsRemaining={getLockMonthsRemaining(lockedEnvelope, state.lockDurationMonths)}
+        onConfirm={(amount, label) => unlockLocked(lockedEnvelope.id, amount, label)}
       />
 
       {/* Onboarding — visible une seule fois */}

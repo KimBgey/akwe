@@ -89,3 +89,43 @@ export function nextPayDate(payDay: number): Date {
 export function hasReliquat(state: BudgetState): boolean {
   return isIncomeAvailable(state) && getFreeBalance(state) > 0
 }
+
+// Date de déblocage de l'épargne bloquée : dernier apport + durée glissante.
+// null si aucun apport n'a encore été fait (rien à débloquer).
+export function getLockUnlockDate(envelope: Envelope, lockDurationMonths: number): Date | null {
+  if (!envelope.lockedSince) return null
+  const since = new Date(envelope.lockedSince)
+  const unlock = new Date(since)
+  unlock.setMonth(unlock.getMonth() + lockDurationMonths)
+  return unlock
+}
+
+export function isLockUnlocked(envelope: Envelope, lockDurationMonths: number): boolean {
+  const unlockDate = getLockUnlockDate(envelope, lockDurationMonths)
+  if (!unlockDate) return true // rien de bloqué, rien à attendre
+  return new Date() >= unlockDate
+}
+
+// Nombre de mois pleins restants avant déblocage (0 si déjà débloquée)
+export function getLockMonthsRemaining(envelope: Envelope, lockDurationMonths: number): number {
+  const unlockDate = getLockUnlockDate(envelope, lockDurationMonths)
+  if (!unlockDate) return 0
+  const now = new Date()
+  if (now >= unlockDate) return 0
+  const months =
+    (unlockDate.getFullYear() - now.getFullYear()) * 12 +
+    (unlockDate.getMonth() - now.getMonth()) +
+    (unlockDate.getDate() > now.getDate() ? 1 : 0)
+  return Math.max(1, months)
+}
+
+// Progression du blocage : mois écoulés depuis le début / durée totale — pour l'affichage "X mois / N"
+export function getLockProgress(envelope: Envelope, lockDurationMonths: number): { elapsed: number; total: number } {
+  if (!envelope.lockedSince) return { elapsed: 0, total: lockDurationMonths }
+  const since = new Date(envelope.lockedSince)
+  const now = new Date()
+  let months = (now.getFullYear() - since.getFullYear()) * 12 + (now.getMonth() - since.getMonth())
+  if (now.getDate() < since.getDate()) months -= 1
+  months = Math.max(0, Math.min(months, lockDurationMonths))
+  return { elapsed: months, total: lockDurationMonths }
+}

@@ -12,7 +12,7 @@ export default defineConfig({
         globPatterns: [],
       },
       manifest: {
-        name: 'Akwɛ — Budget Personnel',
+        name: 'Akwɛ-Budget Personnel',
         short_name: 'Akwɛ',
         description: 'Gère ton budget personnel simplement',
         lang: 'fr',

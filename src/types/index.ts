@@ -13,6 +13,7 @@ export interface Envelope {
   allocatedAmount: number
   spentAmount: number
   createdAt: string
+  lockedSince?: string | null // enveloppe 'locked' uniquement — date du dernier apport, réinitialisée à chaque ajout
 }
 
 export interface GoalWallet extends Envelope {
@@ -24,6 +25,7 @@ export interface GoalWallet extends Envelope {
   status: GoalStatus
   color: string
   icon: string
+  archived?: boolean // objectif atteint et rangé, masqué de la vue principale
 }
 
 export interface Transaction {
@@ -61,6 +63,7 @@ export interface BudgetState {
   snapshots: MonthlySnapshot[]
   payDay: number        // jour du mois du virement (1-31)
   lastIncomeMonth: string // YYYY-MM du dernier revenu saisi
+  lockDurationMonths: number // durée de blocage glissante de l'épargne bloquée
 }
 
 export type Category =

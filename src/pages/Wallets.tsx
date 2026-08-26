@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import clsx from 'clsx'
 import { useBudget } from '@/hooks/useBudget'
 import { useRightPanel } from '@/contexts/RightPanelContext'
 import { getFreeBalance, formatCurrency } from '@/utils/calculations'
@@ -8,7 +9,7 @@ import { TransferModal } from '@/components/goals/TransferModal'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { ProgressBar } from '@/components/ui/ProgressBar'
-import { Plus, Target, Trophy, TrendingUp } from 'lucide-react'
+import { Plus, Target, Trophy, TrendingUp, ChevronDown } from 'lucide-react'
 import { GoalWallet } from '@/types'
 
 function GoalsSummaryPanel({ goals }: { goals: GoalWallet[] }) {
@@ -101,10 +102,12 @@ export function Wallets({ uid }: { uid: string }) {
   const [editingGoal, setEditingGoal]   = useState<GoalWallet | null>(null)
   const [showTransfer, setShowTransfer] = useState(false)
   const [selectedGoal, setSelectedGoal] = useState<GoalWallet | null>(null)
+  const [showArchived, setShowArchived] = useState(false)
 
   const freeBalance  = getFreeBalance(state)
   const activeGoals  = state.goalWallets.filter((g) => g.status === 'active')
-  const completedGoals = state.goalWallets.filter((g) => g.status === 'completed')
+  const completedGoals = state.goalWallets.filter((g) => g.status === 'completed' && !g.archived)
+  const archivedGoals  = state.goalWallets.filter((g) => g.status === 'completed' && g.archived)
 
   useEffect(() => {
     setRightPanel(<GoalsSummaryPanel goals={state.goalWallets} />)
@@ -186,11 +189,36 @@ export function Wallets({ uid }: { uid: string }) {
               <GoalCard
                 key={g.id}
                 goal={g}
-                onEdit={() => handleEditGoal(g)}
+                onArchive={() => updateGoal({ id: g.id, archived: true })}
                 onDelete={() => deleteGoal(g.id)}
               />
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Archived goals — repliés par défaut, pour ne pas encombrer la vue */}
+      {archivedGoals.length > 0 && (
+        <div>
+          <button
+            onClick={() => setShowArchived((v) => !v)}
+            className="flex w-full items-center justify-between gap-2 text-xs font-semibold uppercase tracking-widest text-ink/50 mb-4"
+          >
+            <span>Archivés ({archivedGoals.length})</span>
+            <ChevronDown size={14} className={clsx('transition-transform', showArchived && 'rotate-180')} />
+          </button>
+          {showArchived && (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 opacity-70">
+              {archivedGoals.map((g) => (
+                <GoalCard
+                  key={g.id}
+                  goal={g}
+                  onUnarchive={() => updateGoal({ id: g.id, archived: false })}
+                  onDelete={() => deleteGoal(g.id)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
 

@@ -60,6 +60,7 @@ const DEFAULT_STATE: BudgetState = {
   snapshots: [],
   payDay: 25,
   lastIncomeMonth: '',
+  lockDurationMonths: 6,
 }
 
 type Action =
@@ -73,9 +74,10 @@ type Action =
   | { type: 'REMOVE_DISTRIBUTION_RULE'; payload: { envelopeId: string } }
   | { type: 'UPDATE_ENVELOPE_NAME'; payload: { id: string; name: string } }
   | { type: 'HANDLE_RELIQUAT'; payload: { action: ReliquatAction; goalId?: string } }
-  | { type: 'UNLOCK_LOCKED'; payload: { envelopeId: string; amount: number } }
+  | { type: 'UNLOCK_LOCKED'; payload: { envelopeId: string; amount: number; label: string } }
   | { type: 'ADD_UNEXPECTED_INCOME'; payload: { amount: number; label: string; allocation: 'bonus' | 'free' | 'locked' | 'goal' | 'distribute'; goalId?: string } }
   | { type: 'SET_PAY_DAY'; payload: { day: number } }
+  | { type: 'SET_LOCK_DURATION'; payload: { months: number } }
   | { type: 'RESET_MONTH' }
   | { type: 'RESET_ALL' }
   | { type: 'LOAD'; payload: BudgetState }
@@ -119,9 +121,14 @@ function reducer(state: BudgetState, action: Action): BudgetState {
       const distribution = computeDistribution(amount, stateWithReliquat.distributionRules)
       const freeAmount = distribution['__free'] ?? 0
 
+      const nowIso = new Date().toISOString()
       const updatedEnvelopes = stateWithReliquat.envelopes.map((env) => {
         if (env.type === 'free') return { ...env, allocatedAmount: env.allocatedAmount + freeAmount }
-        return { ...env, allocatedAmount: env.allocatedAmount + (distribution[env.id] ?? 0) }
+        const added = distribution[env.id] ?? 0
+        // Le premier apport démarre le compte à rebours si aucune durée n'a encore été choisie —
+        // les apports suivants n'y touchent plus, seul un changement de durée dans Réglages le fait.
+        const lockedSince = env.type === 'locked' && added > 0 && !env.lockedSince ? nowIso : env.lockedSince
+        return { ...env, allocatedAmount: env.allocatedAmount + added, lockedSince }
       })
 
       const incomeTransaction: Transaction = {
@@ -284,7 +291,7 @@ function reducer(state: BudgetState, action: Action): BudgetState {
           ...state,
           envelopes: state.envelopes.map((e) => {
             if (e.type === 'free') return { ...e, spentAmount: e.spentAmount + balance }
-            if (e.type === 'locked') return { ...e, allocatedAmount: e.allocatedAmount + balance }
+            if (e.type === 'locked') return { ...e, allocatedAmount: e.allocatedAmount + balance, lockedSince: e.lockedSince ?? new Date().toISOString() }
             return e
           }),
           transactions: [tx, ...state.transactions],
@@ -349,15 +356,26 @@ function reducer(state: BudgetState, action: Action): BudgetState {
     case 'SET_PAY_DAY':
       return { ...state, payDay: action.payload.day }
 
+    case 'SET_LOCK_DURATION':
+      // Choisir (ou re-choisir) une durée fixe le point de départ à aujourd'hui,
+      // c'est ce qui donne une date de déblocage fixe, peu importe les apports futurs.
+      return {
+        ...state,
+        lockDurationMonths: action.payload.months,
+        envelopes: state.envelopes.map((e) =>
+          e.type === 'locked' ? { ...e, lockedSince: new Date().toISOString() } : e
+        ),
+      }
+
     case 'UNLOCK_LOCKED': {
-      const { envelopeId, amount } = action.payload
+      const { envelopeId, amount, label } = action.payload
       const tx: Transaction = {
         id: generateId(),
         amount,
         type: 'expense',
         envelopeId,
         category: 'deblocage',
-        label: 'Retrait exceptionnel épargne',
+        label: label || 'Retrait épargne bloquée',
         date: new Date().toISOString(),
       }
       return {
@@ -409,7 +427,7 @@ function reducer(state: BudgetState, action: Action): BudgetState {
         return {
           ...state,
           envelopes: state.envelopes.map((e) =>
-            e.type === 'locked' ? { ...e, allocatedAmount: e.allocatedAmount + amount } : e
+            e.type === 'locked' ? { ...e, allocatedAmount: e.allocatedAmount + amount, lockedSince: e.lockedSince ?? new Date().toISOString() } : e
           ),
           transactions: [{ ...baseTx, envelopeId: lockedEnv.id, category: 'epargne' }, ...state.transactions],
         }
@@ -439,7 +457,8 @@ function reducer(state: BudgetState, action: Action): BudgetState {
           envelopes: state.envelopes.map((env) => {
             if (env.type === 'free') return { ...env, allocatedAmount: env.allocatedAmount + freeAmount }
             const allocated = distribution[env.id] ?? 0
-            return { ...env, allocatedAmount: env.allocatedAmount + allocated }
+            const lockedSince = env.type === 'locked' && allocated > 0 && !env.lockedSince ? new Date().toISOString() : env.lockedSince
+            return { ...env, allocatedAmount: env.allocatedAmount + allocated, lockedSince }
           }),
           transactions: [baseTx, ...state.transactions],
         }
@@ -502,9 +521,18 @@ function migrateState(raw: BudgetState): BudgetState {
     )
   }
 
+  // Comptes existants sans période de blocage : on démarre le compte à rebours
+  // à partir de maintenant plutôt que de débloquer l'épargne existante d'un coup.
+  envelopes = envelopes.map((e) =>
+    e.type === 'locked' && e.lockedSince === undefined
+      ? { ...e, lockedSince: e.allocatedAmount > 0 ? new Date().toISOString() : null }
+      : e
+  )
+
   return {
     ...raw,
     envelopes,
+    lockDurationMonths: raw.lockDurationMonths ?? 6,
     goalWallets: raw.goalWallets.filter((g) => g.id !== 'bonus-mensuel'),
   }
 }
@@ -612,12 +640,16 @@ export function useBudget(uid: string) {
     dispatch({ type: 'HANDLE_RELIQUAT', payload: { action, goalId } })
   }, [])
 
-  const unlockLocked = useCallback((envelopeId: string, amount: number) => {
-    dispatch({ type: 'UNLOCK_LOCKED', payload: { envelopeId, amount } })
+  const unlockLocked = useCallback((envelopeId: string, amount: number, label: string) => {
+    dispatch({ type: 'UNLOCK_LOCKED', payload: { envelopeId, amount, label } })
   }, [])
 
   const setPayDay = useCallback((day: number) => {
     dispatch({ type: 'SET_PAY_DAY', payload: { day } })
+  }, [])
+
+  const setLockDuration = useCallback((months: number) => {
+    dispatch({ type: 'SET_LOCK_DURATION', payload: { months } })
   }, [])
 
   const addUnexpectedIncome = useCallback(
@@ -650,6 +682,7 @@ export function useBudget(uid: string) {
     unlockLocked,
     addUnexpectedIncome,
     setPayDay,
+    setLockDuration,
     resetMonth,
     resetAll,
   }

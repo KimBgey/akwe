@@ -4,7 +4,7 @@ import { getProgress, getMonthsLeft, formatCurrency } from '@/utils/calculations
 import { Card } from '@/components/ui/Card'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import { Badge } from '@/components/ui/Badge'
-import { Calendar, TrendingUp, MoreVertical, Pencil, CheckCircle2, Trash2 } from 'lucide-react'
+import { Calendar, TrendingUp, MoreVertical, Pencil, CheckCircle2, Trash2, Archive, ArchiveRestore } from 'lucide-react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
@@ -13,13 +13,17 @@ interface GoalCardProps {
   onClick?: () => void
   onEdit?: () => void
   onMarkAchieved?: () => void
+  onArchive?: () => void
+  onUnarchive?: () => void
   onDelete?: () => void
 }
 
-function GoalCardMenu({ goal, onEdit, onMarkAchieved, onDelete }: {
+function GoalCardMenu({ goal, onEdit, onMarkAchieved, onArchive, onUnarchive, onDelete }: {
   goal: GoalWallet
   onEdit?: () => void
   onMarkAchieved?: () => void
+  onArchive?: () => void
+  onUnarchive?: () => void
   onDelete?: () => void
 }) {
   const [open, setOpen] = useState(false)
@@ -72,6 +76,24 @@ function GoalCardMenu({ goal, onEdit, onMarkAchieved, onDelete }: {
                   Marquer comme atteint
                 </button>
               )}
+              {onArchive && (
+                <button
+                  onClick={() => { setOpen(false); onArchive() }}
+                  className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-ink/70 transition hover:bg-ink/5 hover:text-ink"
+                >
+                  <Archive size={13} />
+                  Archiver
+                </button>
+              )}
+              {onUnarchive && (
+                <button
+                  onClick={() => { setOpen(false); onUnarchive() }}
+                  className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-ink/70 transition hover:bg-ink/5 hover:text-ink"
+                >
+                  <ArchiveRestore size={13} />
+                  Désarchiver
+                </button>
+              )}
               {onDelete && (
                 <button
                   onClick={() => setConfirmDelete(true)}
@@ -107,11 +129,11 @@ function GoalCardMenu({ goal, onEdit, onMarkAchieved, onDelete }: {
   )
 }
 
-export function GoalCard({ goal, onClick, onEdit, onMarkAchieved, onDelete }: GoalCardProps) {
+export function GoalCard({ goal, onClick, onEdit, onMarkAchieved, onArchive, onUnarchive, onDelete }: GoalCardProps) {
   const progress = getProgress(goal)
   const monthsLeft = getMonthsLeft(goal)
   const remaining = goal.targetAmount - goal.currentAmount
-  const hasMenu = Boolean(onEdit || onMarkAchieved || onDelete)
+  const hasMenu = Boolean(onEdit || onMarkAchieved || onArchive || onUnarchive || onDelete)
 
   return (
     <Card glow="emerald" onClick={onClick}>
@@ -134,7 +156,14 @@ export function GoalCard({ goal, onClick, onEdit, onMarkAchieved, onDelete }: Go
               </p>
             </div>
             {hasMenu && (
-              <GoalCardMenu goal={goal} onEdit={onEdit} onMarkAchieved={onMarkAchieved} onDelete={onDelete} />
+              <GoalCardMenu
+                goal={goal}
+                onEdit={onEdit}
+                onMarkAchieved={onMarkAchieved}
+                onArchive={onArchive}
+                onUnarchive={onUnarchive}
+                onDelete={onDelete}
+              />
             )}
           </div>
         </div>
