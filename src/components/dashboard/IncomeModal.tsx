@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
+import { IncomeCelebration } from '@/components/dashboard/IncomeCelebration'
 import { DistributionRule, Envelope } from '@/types'
 import { formatCurrency } from '@/utils/calculations'
 import { Zap } from 'lucide-react'
@@ -17,6 +18,7 @@ interface IncomeModalProps {
 export function IncomeModal({ open, onClose, onSubmit, distributionRules, envelopes }: IncomeModalProps) {
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
+  const [celebrating, setCelebrating] = useState(false)
 
   const num = parseFloat(amount) || 0
 
@@ -34,12 +36,18 @@ export function IncomeModal({ open, onClose, onSubmit, distributionRules, envelo
   function handleSubmit() {
     setError('')
     if (isNaN(num) || num <= 0) return setError('Montant invalide')
+    setCelebrating(true)
+  }
+
+  function finishCelebration() {
     onSubmit(num)
     setAmount('')
+    setCelebrating(false)
     onClose()
   }
 
   return (
+    <>
     <Modal open={open} onClose={() => { setAmount(''); setError(''); onClose() }} title="Saisir un revenu" size="md">
       <div className="flex flex-col gap-5">
         <Input
@@ -90,5 +98,14 @@ export function IncomeModal({ open, onClose, onSubmit, distributionRules, envelo
         </div>
       </div>
     </Modal>
+    {celebrating && (
+      <IncomeCelebration
+        amount={num}
+        rules={distributionRules.map((rule) => ({ name: getEnvName(rule.envelopeId), amount: getRuleAmount(rule) }))}
+        freeAmount={freeAmount}
+        onDone={finishCelebration}
+      />
+    )}
+    </>
   )
 }

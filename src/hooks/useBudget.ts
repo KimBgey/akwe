@@ -1,6 +1,7 @@
 import { useReducer, useEffect, useCallback, useRef, useState } from 'react'
 import { getDoc, setDoc } from 'firebase/firestore'
 import { budgetRef } from '@/lib/firebase'
+import { DEMO_UID } from '@/contexts/AuthContext'
 import {
   BudgetState,
   GoalWallet,
@@ -125,9 +126,10 @@ function reducer(state: BudgetState, action: Action): BudgetState {
       const updatedEnvelopes = stateWithReliquat.envelopes.map((env) => {
         if (env.type === 'free') return { ...env, allocatedAmount: env.allocatedAmount + freeAmount }
         const added = distribution[env.id] ?? 0
+        if (env.type !== 'locked') return { ...env, allocatedAmount: env.allocatedAmount + added }
         // Le premier apport démarre le compte à rebours si aucune durée n'a encore été choisie —
         // les apports suivants n'y touchent plus, seul un changement de durée dans Réglages le fait.
-        const lockedSince = env.type === 'locked' && added > 0 && !env.lockedSince ? nowIso : env.lockedSince
+        const lockedSince = added > 0 && !env.lockedSince ? nowIso : (env.lockedSince ?? null)
         return { ...env, allocatedAmount: env.allocatedAmount + added, lockedSince }
       })
 
@@ -457,7 +459,8 @@ function reducer(state: BudgetState, action: Action): BudgetState {
           envelopes: state.envelopes.map((env) => {
             if (env.type === 'free') return { ...env, allocatedAmount: env.allocatedAmount + freeAmount }
             const allocated = distribution[env.id] ?? 0
-            const lockedSince = env.type === 'locked' && allocated > 0 && !env.lockedSince ? new Date().toISOString() : env.lockedSince
+            if (env.type !== 'locked') return { ...env, allocatedAmount: env.allocatedAmount + allocated }
+            const lockedSince = allocated > 0 && !env.lockedSince ? new Date().toISOString() : (env.lockedSince ?? null)
             return { ...env, allocatedAmount: env.allocatedAmount + allocated, lockedSince }
           }),
           transactions: [baseTx, ...state.transactions],
@@ -537,33 +540,87 @@ function migrateState(raw: BudgetState): BudgetState {
   }
 }
 
-function readLocalStorage(): BudgetState {
+function readStorageKey(key: string, fallback: () => BudgetState): BudgetState {
   try {
-    const raw = localStorage.getItem(LS_KEY)
-    return raw ? migrateState(JSON.parse(raw) as BudgetState) : DEFAULT_STATE
+    const raw = localStorage.getItem(key)
+    return raw ? migrateState(JSON.parse(raw) as BudgetState) : fallback()
   } catch {
-    return DEFAULT_STATE
+    return fallback()
+  }
+}
+
+function readLocalStorage(): BudgetState {
+  return readStorageKey(LS_KEY, () => DEFAULT_STATE)
+}
+
+const DEMO_LS_KEY = 'akwe_demo_v1'
+
+// Jeu de données réaliste pour le mode démo/test — payDay à 1 et lastIncomeMonth
+// vide pour que le bouton "Revenu mensuel" soit immédiatement testable.
+function buildDemoState(): BudgetState {
+  const monthsAgo = (n: number) => {
+    const d = new Date()
+    d.setMonth(d.getMonth() - n)
+    return d.toISOString()
+  }
+
+  return {
+    envelopes: [
+      { id: 'locked-main', name: 'Épargne bloquée', type: 'locked', allocatedAmount: 210000, spentAmount: 0, createdAt: monthsAgo(3), lockedSince: monthsAgo(2) },
+      { id: 'fixed-main', name: 'Charges fixes', type: 'fixed', allocatedAmount: 90000, spentAmount: 62000, createdAt: monthsAgo(3) },
+      { id: 'free-main', name: 'Solde courant', type: 'free', allocatedAmount: 145000, spentAmount: 58000, createdAt: monthsAgo(3) },
+      { id: 'bonus-main', name: 'Bonus mensuel', type: 'bonus', allocatedAmount: 20000, spentAmount: 0, createdAt: monthsAgo(3) },
+    ],
+    goalWallets: [
+      {
+        id: 'goal-voyage', name: 'Voyage à Abidjan', type: 'goal', allocatedAmount: 0, spentAmount: 0, createdAt: monthsAgo(2),
+        targetAmount: 500000, currentAmount: 180000, monthlyContribution: 40000, deadline: null, status: 'active', color: '', icon: '',
+      },
+    ],
+    transactions: [
+      { id: 'demo-tx-4', amount: 25000, type: 'expense', envelopeId: 'free-main', category: 'transport', label: 'Essence', date: monthsAgo(0) },
+      { id: 'demo-tx-3', amount: 12000, type: 'expense', envelopeId: 'free-main', category: 'alimentation', label: 'Supermarché', date: monthsAgo(0) },
+      { id: 'demo-tx-2', amount: 40000, type: 'transfer', envelopeId: 'goal-voyage', category: 'autre', label: 'Virement vers Voyage à Abidjan', date: monthsAgo(1) },
+      { id: 'demo-tx-1', amount: 350000, type: 'income', envelopeId: 'free-main', category: 'revenu', label: 'Revenu mensuel', date: monthsAgo(1) },
+    ],
+    distributionRules: [
+      { envelopeId: 'locked-main', amount: 70000, percentage: 0, usePercentage: false },
+      { envelopeId: 'fixed-main', amount: 90000, percentage: 0, usePercentage: false },
+    ],
+    monthlyIncome: 350000,
+    currentMonth: getCurrentMonth(),
+    snapshots: [],
+    payDay: 1,
+    lastIncomeMonth: '',
+    lockDurationMonths: 6,
   }
 }
 
 export type SyncStatus = 'local' | 'syncing' | 'synced' | 'error'
 
-// uid : UID Firebase de l'utilisateur connecté (fourni par AuthContext)
+// uid : UID Firebase de l'utilisateur connecté (fourni par AuthContext),
+// ou DEMO_UID pour le compte de test/démo local (aucun accès Firestore).
 export function useBudget(uid: string) {
+  const isDemo = uid === DEMO_UID
+  const storageKey = isDemo ? DEMO_LS_KEY : LS_KEY
+
   // Lecture synchrone du localStorage → pas de scintillement au refresh
-  const [state, dispatch] = useReducer(reducer, DEFAULT_STATE, readLocalStorage)
-  const [syncStatus, setSyncStatus] = useState<SyncStatus>('syncing')
+  const [state, dispatch] = useReducer(reducer, DEFAULT_STATE, () =>
+    readStorageKey(storageKey, isDemo ? buildDemoState : () => DEFAULT_STATE)
+  )
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>(isDemo ? 'local' : 'syncing')
 
   // Vrai une fois le getDoc initial terminé — évite d'écraser Firestore avant lecture
   const firestoreReadyRef = useRef(false)
 
-  // ── 1. localStorage — cache local immédiat ───────────────────────────────────
+  // ── 1. localStorage — cache local immédiat (aussi utilisé comme unique stockage en démo) ──
   useEffect(() => {
-    localStorage.setItem(LS_KEY, JSON.stringify(state))
-  }, [state])
+    localStorage.setItem(storageKey, JSON.stringify(state))
+  }, [state, storageKey])
 
   // ── 2. Firestore — chargement initial quand l'uid est connu ─────────────────
   useEffect(() => {
+    if (isDemo) return
     setSyncStatus('syncing')
     getDoc(budgetRef(uid))
       .then(async (snap) => {
@@ -588,6 +645,7 @@ export function useBudget(uid: string) {
 
   // ── 3. Firestore — écriture à chaque changement d'état ──────────────────────
   useEffect(() => {
+    if (isDemo) return
     if (!firestoreReadyRef.current) return
     setSyncStatus('syncing')
     setDoc(budgetRef(uid), state)

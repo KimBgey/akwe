@@ -360,7 +360,7 @@ function BrowserMockup() {
 }
 
 export function Landing() {
-  const { signInWithGoogle } = useAuth()
+  const { signInWithGoogle, enterDemoMode } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -462,6 +462,14 @@ export function Landing() {
             </div>
             <p className="text-xs text-ink/45">Gratuit · Connexion sécurisée · Aucune carte requise</p>
             {error && <p className="text-xs text-accent-rose">{error}</p>}
+            {import.meta.env.DEV && (
+              <button
+                onClick={enterDemoMode}
+                className="mt-1 text-xs font-medium text-ink/40 underline underline-offset-4 transition hover:text-ink/60"
+              >
+                Continuer en mode démo (dev)
+              </button>
+            )}
           </div>
         </div>
 

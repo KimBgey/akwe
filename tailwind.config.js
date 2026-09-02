@@ -63,6 +63,9 @@ export default {
         'shimmer': 'shimmer 2s linear infinite',
         'marquee': 'marquee var(--marquee-duration, 30s) linear infinite',
         'marquee-reverse': 'marquee-reverse var(--marquee-duration, 30s) linear infinite',
+        'pop-in': 'popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both',
+        'float-up': 'floatUp 2.4s ease-out forwards',
+        'ring-out': 'ringOut 1.6s ease-out infinite',
       },
       keyframes: {
         fadeUp: {
@@ -76,6 +79,21 @@ export default {
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
+        },
+        popIn: {
+          '0%': { opacity: '0', transform: 'scale(0.4)' },
+          '60%': { opacity: '1', transform: 'scale(1.1)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        floatUp: {
+          '0%': { opacity: '0', transform: 'translateY(0) scale(0.7)' },
+          '15%': { opacity: '1' },
+          '85%': { opacity: '1' },
+          '100%': { opacity: '0', transform: 'translateY(-140px) scale(1)' },
+        },
+        ringOut: {
+          '0%': { opacity: '0.5', transform: 'scale(0.8)' },
+          '100%': { opacity: '0', transform: 'scale(1.8)' },
         },
         marquee: {
           '0%': { transform: 'translateX(0)' },

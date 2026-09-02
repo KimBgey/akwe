@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore, doc, type DocumentReference } from 'firebase/firestore'
+import { initializeFirestore, doc, type DocumentReference } from 'firebase/firestore'
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as fbSignOut } from 'firebase/auth'
 
 const firebaseConfig = {
@@ -13,7 +13,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 
-export const db   = getFirestore(app)
+// ignoreUndefinedProperties : un champ `undefined` glissé par erreur dans l'état
+// (ex. lockedSince sur une enveloppe qui n'en a pas besoin) ne doit jamais faire
+// planter setDoc() — Firestore l'ignore simplement plutôt que de lever une erreur.
+export const db   = initializeFirestore(app, { ignoreUndefinedProperties: true })
 export const auth = getAuth(app)
 
 const googleProvider = new GoogleAuthProvider()
